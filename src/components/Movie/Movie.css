@@ -1,0 +1,49 @@
+.responsive-poster {
+	display: block;
+	width: 100%;
+	position: relative;	
+	height: 0;
+	padding-bottom: 153.3742%;
+	//overflow: hidden;
+	&:hover {
+		.responsive-poster-item:after {
+			//opacity: 1;	
+		}
+	}
+}
+
+.responsive-poster-item:after {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+	width: 100%;		
+	background: rgba(255, 255, 255, 0.6);
+	z-index: 20;
+    content: '\A';
+    opacity: 0;
+    transition: all 0.35s;
+}
+
+.responsive-poster-item {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.movie-title {
+	font-size: 1rem;
+	line-height: 1.175rem;
+}
+
+.movie-content {
+	padding: 0.5rem;
+	min-height: 6rem;
+}
