@@ -8,7 +8,7 @@ function MovieList(props) {
     list = movies
       .map((item, index) =>
         <div key={ index } className={ colWidth }>
-          <Movie title={ item.title } poster={ `img/${item.poster}` } />
+          <Movie title={ item.title } poster={ `img/${item.poster}` } year={ item.year }/>
         </div>  
       );
 

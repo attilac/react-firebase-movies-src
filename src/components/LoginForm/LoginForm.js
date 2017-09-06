@@ -1,123 +1,54 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
 
-class LoginForm extends Component {  
+class LoginForm extends Component {   
 
-  state = {    
-    formErrors: {
-      password: '',     
-      username: ''
-    },
-    formIsValid: false,   
-    loggedIn: false, 
-    password: '',
-    passwordIsValid: true,
-    username: '',
-    usernameIsValid: true
-  }   
-
-  fieldOnChange = (event) => {
-    const { name, value } = event.target
-    this.setState({[name]: value}, 
-      () => { 
-        this.validateField(name, value) 
-      })       
-  }     
-
-  formOnSubmit = (event) => {
-    event.preventDefault()
-    const { username, password, formIsValid } = this.state
-    if (formIsValid) {
-      this.setState({ loggedIn: true},
-        () => { 
-          console.log(this.state.loggedIn) 
-          console.log(username)
-          console.log(password)       
-        })
-    }
+  errorClass(isFieldValid) {
+    return isFieldValid ? '' : 'has-danger';     
   } 
 
-  validateField(fieldName, value) {
-    let { formErrors, usernameIsValid, passwordIsValid } = this.state;
-
-    switch (fieldName) {
-    case 'username': {
-      usernameIsValid = value.length > 0;
-      formErrors.username = usernameIsValid ? '' : 'Username is required';
-      break;
-    } 
-    case 'password': {
-      if (value.length === 0) {
-        formErrors.password = 'Password is required';
-      } else {
-        passwordIsValid = value.length > 1 && value.length >= 8;
-        formErrors.password = passwordIsValid ? '' : 'Password is too short. Please use at least 8 chars.';
-      } 
-      break;
-    } 
-    default: {
-      break;
-    }
-    }
-
-    this.setState({ 
-      usernameIsValid: usernameIsValid, 
-      formErrors: formErrors, 
-      passwordIsValid: passwordIsValid
-    }, this.validateForm);
-  }
-
-  validateForm() {
-    this.setState({formIsValid: this.state.usernameIsValid && this.state.passwordIsValid});
-  }  
-
-  errorClass(fieldIsValid) {
-    return fieldIsValid ? '' : 'has-danger';     
+  warningClass(isFieldValid) {
+    return isFieldValid ? '' : 'has-warning';     
   } 
 
-  warningClass(fieldIsValid) {
-    return fieldIsValid ? '' : 'has-warning';     
-  } 
-
-  successClass(fieldIsValid) {
-    return fieldIsValid ? 'has-success' : '';     
+  successClass(isFieldValid) {
+    return isFieldValid ? 'has-success' : '';     
   }    
 
   render() {
-    const { submitText } = this.props,
-      { formErrors, password, passwordIsValid, username, usernameIsValid } = this.state
+    const { fieldOnChange, formOnSubmit, submitText, formErrors, password, isPasswordValid, username, isUsernameValid, isLoggedIn } = this.props
 
-    return (
-      <form onSubmit={ this.formOnSubmit } className="form">
-        <div className={ `form-group ${this.errorClass(usernameIsValid)}` }>
+    return (   
+      <form onSubmit={ formOnSubmit } className="form">
+        <div className={ `form-group ${this.errorClass(isUsernameValid)}` }>
           <label htmlFor="username">Name</label>
           <input 
             type="text" 
             className="form-control" 
             name="username" 
             aria-describedby="userHelp" 
-            onChange={ this.fieldOnChange }
+            onChange={ fieldOnChange }
             value={ username }
           />
           { 
-            !usernameIsValid && <div className="form-control-feedback">{ formErrors.username }</div> 
+            !isUsernameValid && <div className="form-control-feedback">{ formErrors.username }</div> 
           }
         </div>
-        <div className={ `form-group ${this.errorClass(passwordIsValid)}` } >
+        <div className={ `form-group ${this.errorClass(isPasswordValid)}` } >
           <label htmlFor="inputPassword">Password</label>
           <input 
             type="password" 
             className="form-control" 
             name="password" 
-            onChange={ this.fieldOnChange }
+            onChange={ fieldOnChange }
             value={ password }
           />
           { 
-            !passwordIsValid && <div className="form-control-feedback">{ formErrors.password }</div> 
+            !isPasswordValid && <div className="form-control-feedback">{ formErrors.password }</div> 
           }
         </div>
         <button className="btn btn-success my-2 my-sm-0" type="submit">{ submitText }</button>
-      </form>
+      </form>              
     );
   }
 }
