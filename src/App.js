@@ -13,17 +13,10 @@ class App extends Component {
   dropdownToggle = this.dropdownToggle.bind(this);
 
   state = {
-    dropdownOpen: false,
-    formErrors: {
-      password: '',     
-      username: ''
-    },    
+    dropdownOpen: false, 
     genre: '',
     genres: [],
-    isFormValid: false,   
     isLoggedIn: false, 
-    isPasswordValid: true,
-    isUsernameValid: true ,
     movies: [],
     moviesByGenre: [],
     password: '',
@@ -34,62 +27,16 @@ class App extends Component {
   componentDidMount() {
     this.getDataFromApi()
     // console.log(this.state.movies)
-  }
+  }   
 
-  fieldOnChange = (event) => {
-    const { name, value } = event.target
-    this.setState({[name]: value}, 
-      () => { 
-        this.validateField(name, value) 
-      })       
-  }     
-
-  formOnSubmit = (event) => {
-    event.preventDefault()
-    const { username, password, isFormValid } = this.state
-    if (isFormValid) {
-      this.setState({ isLoggedIn: true},
-        () => { 
-          console.log(this.state.isLoggedIn) 
-          console.log(username)
-          console.log(password)       
-        })
-    }
+  onFormSubmit = (username, password) => {
+    this.setState({ username: username, 
+      password: password,  
+      isLoggedIn: true
+    })
+    console.log(this.state.username)
   } 
 
-  validateField(fieldName, value) {
-    let { formErrors, isUsernameValid, isPasswordValid } = this.state;
-
-    switch (fieldName) {
-    case 'username': {
-      isUsernameValid = value.length > 0;
-      formErrors.username = isUsernameValid ? '' : 'Username is required';
-      break;
-    } 
-    case 'password': {
-      if (value.length === 0) {
-        formErrors.password = 'Password is required';
-      } else {
-        isPasswordValid = value.length > 1 && value.length >= 8;
-        formErrors.password = isPasswordValid ? '' : 'Password is too short. Please use at least 8 chars.';
-      } 
-      break;
-    } 
-    default: {
-      break;
-    }
-    }
-
-    this.setState({ 
-      isUsernameValid: isUsernameValid, 
-      formErrors: formErrors, 
-      isPasswordValid: isPasswordValid
-    }, this.validateForm);
-  }
-
-  validateForm() {
-    this.setState({isFormValid: this.state.isUsernameValid && this.state.isPasswordValid});
-  }     
 
   getDataFromApi() {
     fetch('https://fend-api.herokuapp.com/movies')
@@ -164,7 +111,7 @@ class App extends Component {
         </Navbar>  
 
         { !isLoggedIn &&
-            <LoginPage submitText="Login" fieldOnChange={ this.fieldOnChange } formOnSubmit={ this.formOnSubmit } formErrors={ formErrors } password={ password } isPasswordValid={ isPasswordValid } isUsernameValid={ isUsernameValid } isLoggedIn={ isLoggedIn }/>
+            <LoginPage submitText="Login" isLoggedIn={ isLoggedIn } onFormSubmit={ this.onFormSubmit }/>
         }
 
         { isLoggedIn &&
