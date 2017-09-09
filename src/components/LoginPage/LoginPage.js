@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import LoginForm from '../LoginForm/LoginForm.js'
 
 function LoginPage(props) {
     
@@ -8,7 +7,7 @@ function LoginPage(props) {
       <div className="col-sm-6 push-sm-3">
         <div className="card mb-3">
           <div className="card-block">   
-            <LoginForm submitText="Login" { ...props }/>
+            { props.children }
           </div>  
         </div>  
       </div>  

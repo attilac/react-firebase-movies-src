@@ -1,5 +1,8 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'  
+import Button from '../Button/Button.js';
+import InputField from '../InputField/InputField.js';
 
 class LoginForm extends Component {  
 
@@ -25,54 +28,46 @@ class LoginForm extends Component {
       })       
   }     
 
-  onFormSubmit = (event) => {
+  onSubmit = (event) => {
     event.preventDefault()
     const { username, password, isFormValid } = this.state
     if (isFormValid) {
-      /*
-      this.setState({ isLoggedIn: true},
-        () => { 
-          console.log(this.state.isLoggedIn) 
-          console.log(username)
-          console.log(password)       
-        }) */
       this.props.onFormSubmit( username, password )
-      //console.log(this.props)
+    } else {
+      this.validateField('username', username)
+      this.validateField('password', password)
     }
   } 
 
+  onButtonClick = (event) => {
+    //console.log(event.target)
+  }
+
   validateField(fieldName, value) {
-    let { formErrors, isUsernameValid, isPasswordValid } = this.state;
+    let { formErrors, isUsernameValid, isPasswordValid } = this.state
 
-    switch (fieldName) {
-    case 'username': {
-      isUsernameValid = value.length > 0;
-      formErrors.username = isUsernameValid ? '' : 'Username is required';
-      break;
-    } 
-    case 'password': {
-      if (value.length === 0) {
-        formErrors.password = 'Password is required';
+    if (fieldName === 'username') {
+      isUsernameValid = value ? true : false
+      formErrors.username = isUsernameValid ? '' : 'Username is required'
+      this.setState({ isUsernameValid: isUsernameValid, formErrors: formErrors }, this.validateForm)
+    } else if (fieldName === 'password') {
+      if (value) {
+        isPasswordValid = value.length >= 8;
+        formErrors.password = isPasswordValid ? '' : 'Password is too short. Please use at least 8 chars.';       
       } else {
-        isPasswordValid = value.length > 1 && value.length >= 8;
-        formErrors.password = isPasswordValid ? '' : 'Password is too short. Please use at least 8 chars.';
+        isPasswordValid = false      
+        formErrors.password = isPasswordValid ? '' : 'Password is required'
       } 
-      break;
-    } 
-    default: {
-      break;
+      this.setState({ isPasswordValid: isPasswordValid, formErrors: formErrors }, this.validateForm)
     }
-    }
-
-    this.setState({ 
-      isUsernameValid: isUsernameValid, 
-      formErrors: formErrors, 
-      isPasswordValid: isPasswordValid
-    }, this.validateForm);
   }
 
   validateForm() {
-    this.setState({isFormValid: this.state.isUsernameValid && this.state.isPasswordValid});
+    //console.log(this.state.username)
+    //console.log(this.state.password)
+    //console.log(this.state.isFormValid)
+    //console.log(this.state.formErrors)
+    this.setState({ isFormValid: this.state.isUsernameValid && this.state.isPasswordValid });
   }   
 
   errorClass(isFieldValid) {
@@ -90,16 +85,15 @@ class LoginForm extends Component {
   render() {
     const { submitText, onFormSubmit } = this.props,
       { formErrors, password, isPasswordValid, username, isUsernameValid, isLoggedIn } = this.state
-    //console.log(this.props)  
+
     return (   
-      <form onSubmit={ this.onFormSubmit } className="form">
-        <div className={ `form-group ${this.errorClass(isUsernameValid)}` }>
+      <form onSubmit={ this.onSubmit } className="form">
+        <div className={ `form-group ${ this.errorClass(isUsernameValid)}` }>
           <label htmlFor="username">Name</label>
-          <input 
-            type="text" 
-            className="form-control" 
+          <InputField 
+            htmlType="text" 
+            classes="form-control"
             name="username" 
-            aria-describedby="userHelp" 
             onChange={ this.fieldOnChange }
             value={ username }
           />
@@ -107,23 +101,35 @@ class LoginForm extends Component {
             !isUsernameValid && <div className="form-control-feedback">{ formErrors.username }</div> 
           }
         </div>
-        <div className={ `form-group ${this.errorClass(isPasswordValid)}` } >
+        <div className={ `form-group ${ this.errorClass(isPasswordValid) }` } >
           <label htmlFor="inputPassword">Password</label>
-          <input 
-            type="password" 
-            className="form-control" 
+          <InputField 
+            htmlType="password" 
+            classes="form-control" 
             name="password" 
             onChange={ this.fieldOnChange }
             value={ password }
           />
           { 
-            !isPasswordValid && <div className="form-control-feedback">{ formErrors.password }</div> 
+            !isPasswordValid && 
+            <div className="form-control-feedback">{ formErrors.password }</div> 
           }
         </div>
-        <button className="btn btn-success my-2 my-sm-0" type="submit">{ submitText }</button>
+        <Button 
+          onClick={ this.onButtonClick } 
+          htmlType="submit" 
+          className="my-2 my-sm-0" 
+          title={ submitText } 
+          color="success" 
+        />
       </form>              
     );
   }
+}
+
+LoginForm.propTypes = {
+  onFormSubmit: PropTypes.func.isRequired, 
+  submitText: PropTypes.string.isRequired   
 }
 
 export default LoginForm;    

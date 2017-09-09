@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import Navbar from './components/Navbar/Navbar.js'
 import InputField from './components/InputField/InputField.js'
+import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieList from './components/MovieList/MovieList.js'
 import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
@@ -10,10 +11,7 @@ import utils from './scripts/utils.js'
 
 class App extends Component {
 
-  dropdownToggle = this.dropdownToggle.bind(this);
-
   state = {
-    dropdownOpen: false, 
     genre: '',
     genres: [],
     isLoggedIn: false, 
@@ -60,12 +58,7 @@ class App extends Component {
     this.setState({ searchTerm: event.target.value })
   }  
 
-  dropdownToggle() {
-    this.setState({ dropdownOpen: !this.state.dropdownOpen })
-  } 
-
   genreOnClick = (event) => {
-    // console.log( e.target.innerHTML ) 
     const moviesFilteredByGenre = this.state.movies.filter(movie => 
       movie.genres.includes(event.target.innerHTML)
     )
@@ -87,10 +80,9 @@ class App extends Component {
   }    
 
   render() {
-    const { searchTerm, movies, genre, genres, moviesByGenre, dropdownOpen } = this.state,
-      { formErrors, password, isPasswordValid, username, isUsernameValid, isLoggedIn } = this.state,
-      heading = genre ? <p> Movies in { genre } </p> : '',
-      greeting = isLoggedIn ? <p> Hello { username } </p> : ''
+    const { searchTerm, movies, genre, genres, moviesByGenre } = this.state,
+      { password, username, isLoggedIn } = this.state,
+      heading = genre ? <p> Movies in { genre } </p> : ''
 
     let moviesToRender = genre ? moviesByGenre : movies
     moviesToRender = searchTerm ? moviesToRender
@@ -103,22 +95,42 @@ class App extends Component {
 
         <Navbar title="React Movies">
           { isLoggedIn &&
-            <DropdownSelect dropdownOpen={ dropdownOpen } toggle={ this.dropdownToggle } items={ genres } onClick={ this.genreOnClick } genre={ genre }/> 
+            <DropdownSelect 
+              items={ genres } 
+              onClick={ this.genreOnClick } 
+              currentItem={ genre } 
+            /> 
           }
           { isLoggedIn &&
-            <InputField onSubmit={ this.searchOnSubmit } onChange={ this.searchOnChange } value={ searchTerm } placeHolder="Find Movies" classes="font-weight-100"/>
+            <InputField 
+              onSubmit={ this.searchOnSubmit } 
+              onChange={ this.searchOnChange } 
+              value={ searchTerm } 
+              placeHolder="Find Movies" 
+              classes="form-control font-weight-100" 
+              name="movieSearch"
+            />
           }
         </Navbar>  
 
         { !isLoggedIn &&
-            <LoginPage submitText="Login" isLoggedIn={ isLoggedIn } onFormSubmit={ this.onFormSubmit }/>
+            <LoginPage >
+              <LoginForm 
+                submitText="Login" 
+                isLoggedIn={ isLoggedIn } 
+                onFormSubmit={ this.onFormSubmit } 
+              />
+            </LoginPage>
         }
 
         { isLoggedIn &&
           <div className="container-fluid">
-            { /* heading */ }
+            { /* <p> Hello { username } </p> */ }
             { /* greeting */ }
-            <MovieList movies={ moviesToRender } colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"/>  
+            <MovieList 
+              movies={ moviesToRender } 
+              colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4" 
+            />  
           </div>
         }  
       </div>

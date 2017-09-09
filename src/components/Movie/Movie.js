@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import './Movie.css';
 
 function Movie(props) {
@@ -15,6 +16,17 @@ function Movie(props) {
       {children}
     </div>  
   </div>;        
+}
+
+Movie.propTypes = {
+  title: PropTypes.string,
+  poster: PropTypes.string,
+  year: PropTypes.string,
+  children: PropTypes.string,
+}
+
+Movie.defaultProps = {
+  poster: ''
 }
 
 export default Movie;

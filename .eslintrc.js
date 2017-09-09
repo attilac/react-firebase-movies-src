@@ -35,6 +35,10 @@ module.exports = {
         ],
         "no-console": "off",
         "no-unused-vars": "off",
-        "react/prop-types": "off"
+        "react/jsx-curly-spacing": [
+            "off", {
+                "when": "never", 
+                "allowMultiline": false
+        }]
     }
 };

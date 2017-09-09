@@ -5820,6 +5820,9 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   letter-spacing: 1px;
   font-weight: 600; }
 
+.navbar.navbar-inverse .navbar-toggler {
+  font-size: 1rem; }
+
 .bg-smoke {
   background-color: #e8e8e8; }
 

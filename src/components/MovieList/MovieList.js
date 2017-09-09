@@ -1,5 +1,6 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import Movie from '../Movie/Movie.js';
 
 function MovieList(props) {
@@ -19,5 +20,9 @@ function MovieList(props) {
   </section>    
 }
 
-export default MovieList;
+MovieList.propTypes = {
+  movies: PropTypes.arrayOf(PropTypes.object).isRequired,
+  colWidth: PropTypes.string
+}
 
+export default MovieList;
