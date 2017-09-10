@@ -4,12 +4,28 @@ import PropTypes from 'prop-types'
 import Movie from '../Movie/Movie.js';
 
 function MovieList(props) {
-  // console.log(props.movies)
   const { movies, colWidth } = props,
+
+    getGenreLinkList = function(genres){
+      const genreLinks = genres
+        .map((genre, index) =>
+          <li key={ index } className="list-inline-item movie-genre-item">
+            <a className="genre-link" href={ `/genre/${genre.toLowerCase()}`}>
+              <small>{ genre }</small>
+            </a>
+          </li>
+        )
+      return <ul className="list-inline movie-genre-list">
+        { genreLinks }
+      </ul>
+    }, 
+
     list = movies
       .map((item, index) =>
         <div key={ index } className={ colWidth }>
-          <Movie title={ item.title } poster={ `img/${item.poster}` } year={ item.year }/>
+          <Movie title={ item.title } poster={ `img/${item.poster}` } year={ item.year }>
+            { getGenreLinkList(item.genres) }
+          </Movie>
         </div>  
       );
 

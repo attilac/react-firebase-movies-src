@@ -14,7 +14,7 @@ class App extends Component {
   state = {
     genre: '',
     genres: [],
-    isLoggedIn: false, 
+    isLoggedIn: true, 
     movies: [],
     moviesByGenre: [],
     password: '',
@@ -58,7 +58,7 @@ class App extends Component {
     this.setState({ searchTerm: event.target.value })
   }  
 
-  genreOnClick = (event) => {
+  getMoviesByGenre = (event) => {
     const moviesFilteredByGenre = this.state.movies.filter(movie => 
       movie.genres.includes(event.target.innerHTML)
     )
@@ -66,6 +66,13 @@ class App extends Component {
       genre: event.target.innerHTML,
       moviesByGenre: moviesFilteredByGenre
     })     
+  }
+
+  getMoviesBySearchTerm(movies) {
+    const { searchTerm } = this.state
+    return movies
+      .filter(movie => movie.title
+        .includes(searchTerm)) 
   }
 
   getMoviesPropertyList(key) {
@@ -77,7 +84,7 @@ class App extends Component {
 
   getGenresFromDatabase() {
     return utils.sortArray(utils.getUniqueArray(utils.getConcatArray(this.getMoviesPropertyList('genres'))))
-  }    
+  }     
 
   render() {
     const { searchTerm, movies, genre, genres, moviesByGenre } = this.state,
@@ -85,10 +92,9 @@ class App extends Component {
       heading = genre ? <p> Movies in { genre } </p> : ''
 
     let moviesToRender = genre ? moviesByGenre : movies
-    moviesToRender = searchTerm ? moviesToRender
-      .filter(movie => movie.title
-        .includes(searchTerm)) : moviesToRender
-    // console.log(moviesToRender)
+    moviesToRender = searchTerm ? 
+      this.getMoviesBySearchTerm(moviesToRender) 
+      : moviesToRender
 
     return (
       <div className="App">
@@ -97,7 +103,7 @@ class App extends Component {
           { isLoggedIn &&
             <DropdownSelect 
               items={ genres } 
-              onClick={ this.genreOnClick } 
+              onClick={ this.getMoviesByGenre } 
               currentItem={ genre } 
             /> 
           }
