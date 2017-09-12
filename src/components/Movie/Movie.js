@@ -22,7 +22,7 @@ Movie.propTypes = {
   title: PropTypes.string,
   poster: PropTypes.string,
   year: PropTypes.string,
-  children: PropTypes.string,
+  children: PropTypes.object,
 }
 
 Movie.defaultProps = {
