@@ -8,15 +8,17 @@ import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieList from './components/MovieList/MovieList.js'
 import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
 import ScrollToTop from './components/ScrollToTop.js';
+import DummyComp from './components/DummyComp.js';
 import './App.css'
 import utils from './scripts/utils.js'
+import firebase from './firebase.js'
 
 class App extends Component {
 
   state = {
     genre: '',
     genres: [],
-    isLoggedIn: true, 
+    isLoggedIn: false, 
     movies: [],
     moviesByGenre: [],
     password: '',
@@ -26,16 +28,48 @@ class App extends Component {
 
   componentDidMount() {
     this.getDataFromApi()
-  }    
+
+    firebase.auth()
+      .onAuthStateChanged(user => {
+        if(user) {
+          this.setState({ isLoggedIn: true })
+          //console.log(user)
+        } else {
+          // Denied user === null
+          console.log('There was an error')
+        }
+      })
+  }  
+
+  createUser = () => {
+    const { email, password } = this.state
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .catch(error => console.log(error)) 
+  }
+
+  loginUser = () => {
+    const { email, password } = this.state
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => console.log(error)) 
+  }  
 
   onFormSubmit = (username, password) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(username, password)
+      .catch(error => console.log(error)) 
+
+    /*       
     this.setState({ username: username, 
       password: password,  
       isLoggedIn: true
     })
-    console.log(this.state.username)
+    console.log(this.state.username)*/
   } 
-
 
   getDataFromApi() {
     fetch('https://fend-api.herokuapp.com/movies')
@@ -96,6 +130,7 @@ class App extends Component {
       <Router> 
         <ScrollToTop>
           <div className="App">
+            { /*<Route path="/prop-test/:propname" component={ <DummyComp title="hej" /> }/> */ }
             <Route path='/' render={({ location }) => (
               <Navbar title="React Movies">
                 { isLoggedIn &&
@@ -125,7 +160,7 @@ class App extends Component {
               <div className="container-fluid">
                 <Switch>
 
-                  <Route path='/login' render={() => (
+                  <Route path='/login' render={({ match }) => (
                     isLoggedIn ? (
                       <Redirect to="/"/>
                     ) : (
