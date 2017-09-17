@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import firebase from './firebase.js'
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 import Navbar from './components/Navbar/Navbar.js'
 import InputField from './components/InputField/InputField.js'
@@ -7,11 +8,13 @@ import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieList from './components/MovieList/MovieList.js'
 import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
-import ScrollToTop from './components/ScrollToTop.js';
-import DummyComp from './components/DummyComp.js';
-import './App.css'
+import ScrollToTop from './components/ScrollToTop.js'
+import Spinner from './components/Spinner/Spinner'
 import utils from './scripts/utils.js'
-import firebase from './firebase.js'
+import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
+import './App.css'
+
+import DummyComp from './components/DummyComp.js';
 
 class App extends Component {
 
@@ -23,6 +26,7 @@ class App extends Component {
     moviesByGenre: [],
     password: '',
     searchTerm: '',
+    user: undefined,
     username: ''
   }
 
@@ -32,7 +36,10 @@ class App extends Component {
     firebase.auth()
       .onAuthStateChanged(user => {
         if(user) {
-          this.setState({ isLoggedIn: true })
+          this.setState({ 
+            isLoggedIn: true, 
+            user: user
+          })
           //console.log(user)
         } else {
           // Denied user === null
@@ -62,13 +69,6 @@ class App extends Component {
       .auth()
       .signInWithEmailAndPassword(username, password)
       .catch(error => console.log(error)) 
-
-    /*       
-    this.setState({ username: username, 
-      password: password,  
-      isLoggedIn: true
-    })
-    console.log(this.state.username)*/
   } 
 
   getDataFromApi() {
@@ -125,7 +125,7 @@ class App extends Component {
 
   render() {
     const { searchTerm, movies, genre, genres } = this.state,
-      { password, username, isLoggedIn } = this.state
+      { password, username, isLoggedIn, user } = this.state
     return (
       <Router> 
         <ScrollToTop>
@@ -158,54 +158,58 @@ class App extends Component {
             <main>
                  
               <div className="container-fluid">
-                <Switch>
+                {
+                  user == undefined ?
+                    <Spinner />
+                    :           
+                    <Switch>
+                      <Route path='/login' render={({ match }) => (
+                        isLoggedIn ? (
+                          <Redirect to="/"/>
+                        ) : (
+                          <LoginPage >
+                            <LoginForm 
+                              submitText="Login" 
+                              isLoggedIn={ isLoggedIn } 
+                              onFormSubmit={ this.onFormSubmit } 
+                            />
+                          </LoginPage> 
+                        )
+                      )}/>   
 
-                  <Route path='/login' render={({ match }) => (
-                    isLoggedIn ? (
-                      <Redirect to="/"/>
-                    ) : (
-                      <LoginPage >
-                        <LoginForm 
-                          submitText="Login" 
-                          isLoggedIn={ isLoggedIn } 
-                          onFormSubmit={ this.onFormSubmit } 
-                        />
-                      </LoginPage> 
-                    )
-                  )}/>   
+                      <Route exact path='/' render={({ match }) => (
+                        !isLoggedIn ? (
+                          <Redirect to="/login"/>
+                        ) : (
+                          <MovieList 
+                            movies={
+                              searchTerm ? 
+                                this.getMoviesBySearchTerm(movies) 
+                                : movies
+                            } 
+                            colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+                          />
+                        )                  
+                      )}/>
 
-                  <Route exact path='/' render={({ match }) => (
-                    !isLoggedIn ? (
-                      <Redirect to="/login"/>
-                    ) : (
-                      <MovieList 
-                        movies={
-                          searchTerm ? 
-                            this.getMoviesBySearchTerm(movies) 
-                            : movies
-                        } 
-                        colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                      />
-                    )                  
-                  )}/>
-
-                  <Route path='/genre/:genreName' render={({ match }) => (
-                    !isLoggedIn ? (
-                      <Redirect to="/login"/>
-                    ) : (
-                      <MovieList 
-                        movies={ 
-                          searchTerm ? 
-                            this.getMoviesBySearchTerm(this.getMoviesByGenre(match.params.genreName)) 
-                            :
-                            this.getMoviesByGenre(match.params.genreName)
-                        } 
-                        colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                      />
-                    )                    
-                  )}/>
-                 
-                </Switch>   
+                      <Route path='/genre/:genreName' render={({ match }) => (
+                        !isLoggedIn ? (
+                          <Redirect to="/login"/>
+                        ) : (
+                          <MovieList 
+                            movies={ 
+                              searchTerm ? 
+                                this.getMoviesBySearchTerm(this.getMoviesByGenre(match.params.genreName)) 
+                                :
+                                this.getMoviesByGenre(match.params.genreName)
+                            } 
+                            colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+                          />
+                        )                    
+                      )}/>
+                     
+                    </Switch>   
+                }
               </div>  
 
             </main>          

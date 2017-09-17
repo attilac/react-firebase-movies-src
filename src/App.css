@@ -5818,10 +5818,28 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-weight: 600; }
+  font-weight: 600;
+  padding-top: .4375rem;
+  padding-bottom: .4375rem; }
 
 .navbar.navbar-inverse .navbar-toggler {
   font-size: 1rem; }
+
+.ajax-load-indicator-container {
+  position: relative;
+  font-size: 3rem; }
+
+.ajax-load-indicator-container {
+  position: absolute;
+  z-index: 1000;
+  width: 100Vw;
+  height: 100Vh; }
+  .ajax-load-indicator-container i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -1.5rem;
+    margin-top: -1.5rem; }
 
 .bg-smoke {
   background-color: #e8e8e8; }

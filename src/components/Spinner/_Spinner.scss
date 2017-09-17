@@ -1,0 +1,17 @@
+.ajax-load-indicator-container {
+  position: relative;
+  font-size: 3rem;
+}
+.ajax-load-indicator-container {
+  position: absolute;
+  z-index: 1000;
+  width: 100Vw;
+  height: 100Vh;
+  i{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -1.5rem;
+    margin-top: -1.5rem;
+  }
+}
