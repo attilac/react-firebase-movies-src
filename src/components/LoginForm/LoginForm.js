@@ -96,7 +96,10 @@ class LoginForm extends Component {
             value={ email }
           />
           { 
-            !isEmailValid && <div className="form-control-feedback">{ formErrors.email }</div> 
+            !isEmailValid && 
+              <div className="form-control-feedback">
+                { formErrors.email }
+              </div> 
           }
         </div>
         <div className={ `form-group ${ this.errorClass(isPasswordValid) }` } >
@@ -111,7 +114,9 @@ class LoginForm extends Component {
           />
           { 
             !isPasswordValid && 
-            <div className="form-control-feedback">{ formErrors.password }</div> 
+              <div className="form-control-feedback">
+                { formErrors.password }
+              </div> 
           }
         </div>
         <Button 
