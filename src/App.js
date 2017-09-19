@@ -1,27 +1,30 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import firebase from './firebase.js'
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
-import Navbar from './components/Navbar/Navbar.js'
-import InputField from './components/InputField/InputField.js'
+//import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+//import Navbar from './components/Navbar/Navbar.js'
+import SiteHeader from './components/SiteHeader/SiteHeader.js'
+//import InputField from './components/InputField/InputField.js'
+//import UserDropdown from './components/UserDropdown/UserDropdown.js'
 import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieList from './components/MovieList/MovieList.js'
-import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
+//import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
+//import GenreDropdownMenu from './components/GenreDropdownMenu/GenreDropdownMenu.js'
+import PropsRoute from './components/PropsRoute/PropsRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
 import Spinner from './components/Spinner/Spinner'
 import utils from './scripts/utils.js'
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './App.css'
 
-import DummyComp from './components/DummyComp.js';
+//import DummyComp from './components/DummyComp.js';
 
 class App extends Component {
 
   state = {
-    genre: '',
+    errorMessage: '',
     genres: [],
-    isLoggedIn: false, 
     movies: [],
     moviesByGenre: [],
     password: '',
@@ -33,20 +36,34 @@ class App extends Component {
   componentDidMount() {
     this.getDataFromApi()
 
-    firebase.auth()
+    firebase
+      .auth()
       .onAuthStateChanged(user => {
         if(user) {
+          //const displayName = user.displayName;
+          const email = user.email;
+          //const emailVerified = user.emailVerified;
+          //const photoURL = user.photoURL;
+          //const uid = user.uid; //KEY! UID!         
           this.setState({ 
-            isLoggedIn: true, 
-            user: user
+            user: user,
+            username: email
           })
-          //console.log(user)
+          console.log(user)
         } else {
-          // Denied user === null
-          console.log('There was an error')
+          this.setState({ 
+            user: user,
+            username: ''
+          })          
         }
       })
-  }  
+  } 
+
+  componentWillUnmount() {
+    firebase
+      .auth()
+      .unsubscribeAuthStateChanged()
+  } 
 
   createUser = () => {
     const { email, password } = this.state
@@ -64,11 +81,25 @@ class App extends Component {
       .catch(error => console.log(error)) 
   }  
 
+  logOutUser = () => {
+    firebase
+      .auth()
+      .signOut()
+      .catch(error => {
+        console.log(error)
+      }) 
+  }   
+
   onFormSubmit = (username, password) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(username, password)
-      .catch(error => console.log(error)) 
+      .catch(error => {
+        const errorMessage = error.message
+        //const errorCode = error.code
+        this.setState({ errorMessage: errorMessage})
+        console.log(errorMessage)
+      }) 
   } 
 
   getDataFromApi() {
@@ -124,63 +155,52 @@ class App extends Component {
   }     
 
   render() {
-    const { searchTerm, movies, genre, genres } = this.state,
-      { password, username, isLoggedIn, user } = this.state
+    const { searchTerm, movies, genres } = this.state,
+      { username, user, errorMessage } = this.state
     return (
       <Router> 
         <ScrollToTop>
-          <div className="App">
-            { /*<Route path="/prop-test/:propname" component={ <DummyComp title="hej" /> }/> */ }
-            <Route path='/' render={({ location }) => (
-              <Navbar title="React Movies">
-                { isLoggedIn &&
-                  <DropdownSelect 
-                    items={ genres } 
-                    currentItem={ 
-                      location.pathname !== '/' ? 
-                        location.pathname.substring(location.pathname.lastIndexOf('/') + 1) 
-                        : genre 
-                    } 
-                  /> 
-                }
-                { isLoggedIn &&
-                  <InputField 
-                    onSubmit={ this.searchOnSubmit } 
-                    onChange={ this.searchOnChange } 
-                    value={ searchTerm } 
-                    placeHolder="Find Movies" 
-                    classes="form-control font-weight-100" 
-                    name="movieSearch"
-                  />
-                }  
-              </Navbar>
-            )}/>
-            <main>
-                 
+          <div className="App">        
+            {                        
+              user === undefined ?
+                null       
+                :     
+                <PropsRoute
+                  path="/"
+                  component={ SiteHeader }
+                  user={ user }
+                  username={ username }
+                  navbarTitle={ 'React Movies' }
+                  genres={ genres }
+                  searchOnSubmit={ this.searchOnSubmit }
+                  searchOnChange={ this.searchOnChange }
+                  logOutUser={ this.logOutUser }
+                />                                                 
+            } 
+
+            <main>                 
               <div className="container-fluid">
                 {
-                  user == undefined ?
+                  user === undefined ?
                     <Spinner />
                     :           
                     <Switch>
                       <Route path='/login' render={({ match }) => (
-                        isLoggedIn ? (
+                        user ? (
                           <Redirect to="/"/>
                         ) : (
                           <LoginPage >
                             <LoginForm 
-                              submitText="Login" 
-                              isLoggedIn={ isLoggedIn } 
+                              submitBtnLabel="Log in" 
+                              errorMessage={ errorMessage }
                               onFormSubmit={ this.onFormSubmit } 
                             />
                           </LoginPage> 
                         )
-                      )}/>   
+                      )}/>                       
 
                       <Route exact path='/' render={({ match }) => (
-                        !isLoggedIn ? (
-                          <Redirect to="/login"/>
-                        ) : (
+                        user ? (
                           <MovieList 
                             movies={
                               searchTerm ? 
@@ -188,14 +208,14 @@ class App extends Component {
                                 : movies
                             } 
                             colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                          />
+                          />                          
+                        ) : (
+                          <Redirect to="/login"/>
                         )                  
                       )}/>
 
                       <Route path='/genre/:genreName' render={({ match }) => (
-                        !isLoggedIn ? (
-                          <Redirect to="/login"/>
-                        ) : (
+                        user ? (
                           <MovieList 
                             movies={ 
                               searchTerm ? 
@@ -204,14 +224,15 @@ class App extends Component {
                                 this.getMoviesByGenre(match.params.genreName)
                             } 
                             colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                          />
+                          />                          
+                        ) : (
+                          <Redirect to="/login"/>                        
                         )                    
                       )}/>
                      
                     </Switch>   
                 }
               </div>  
-
             </main>          
           </div>
         </ScrollToTop>

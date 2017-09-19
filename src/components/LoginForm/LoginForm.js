@@ -9,15 +9,14 @@ class LoginForm extends Component {
   state = {
     formErrors: {
       password: '',     
-      username: ''
+      email: ''
     },    
     isFormValid: false,   
-    isLoggedIn: false, 
     isPasswordValid: true,
-    isUsernameValid: true ,
+    isEmailValid: true ,
     password: '',
     searchTerm: '',
-    username: ''
+    email: ''
   }
 
   fieldOnChange = (event) => {
@@ -30,11 +29,11 @@ class LoginForm extends Component {
 
   onSubmit = (event) => {
     event.preventDefault()
-    const { username, password, isFormValid } = this.state
+    const { email, password, isFormValid } = this.state
     if (isFormValid) {
-      this.props.onFormSubmit( username, password )
+      this.props.onFormSubmit( email, password )
     } else {
-      this.validateField('username', username)
+      this.validateField('email', email)
       this.validateField('password', password)
     }
   } 
@@ -44,30 +43,22 @@ class LoginForm extends Component {
   }
 
   validateField(fieldName, value) {
-    let { formErrors, isUsernameValid, isPasswordValid } = this.state
+    let { formErrors, isEmailValid, isPasswordValid } = this.state
 
-    if (fieldName === 'username') {
-      isUsernameValid = value ? true : false
-      formErrors.username = isUsernameValid ? '' : 'Username is required'
-      this.setState({ isUsernameValid: isUsernameValid, formErrors: formErrors }, this.validateForm)
+    if (fieldName === 'email') {
+      //console.log('email validate')
+      isEmailValid = value ? true : false
+      formErrors.email = isEmailValid ? '' : 'Email is required'
+      this.setState({ isEmailValid: isEmailValid, formErrors: formErrors }, this.validateForm)
     } else if (fieldName === 'password') {
-      if (value) {
-        isPasswordValid = value.length >= 8;
-        formErrors.password = isPasswordValid ? '' : 'Password is too short. Please use at least 8 chars.';       
-      } else {
-        isPasswordValid = false      
-        formErrors.password = isPasswordValid ? '' : 'Password is required'
-      } 
+      isPasswordValid = value ? true : false 
+      formErrors.password = isPasswordValid ? '' : 'Password is required'
       this.setState({ isPasswordValid: isPasswordValid, formErrors: formErrors }, this.validateForm)
     }
   }
 
   validateForm() {
-    //console.log(this.state.username)
-    //console.log(this.state.password)
-    //console.log(this.state.isFormValid)
-    //console.log(this.state.formErrors)
-    this.setState({ isFormValid: this.state.isUsernameValid && this.state.isPasswordValid });
+    this.setState({ isFormValid: this.state.isEmailValid && this.state.isPasswordValid });
   }   
 
   errorClass(isFieldValid) {
@@ -83,22 +74,29 @@ class LoginForm extends Component {
   }    
 
   render() {
-    const { submitText, onFormSubmit } = this.props,
-      { formErrors, password, isPasswordValid, username, isUsernameValid, isLoggedIn } = this.state
+    const { errorMessage, submitBtnLabel } = this.props,
+      { formErrors, password, isPasswordValid, email, isEmailValid } = this.state
 
     return (   
       <form onSubmit={ this.onSubmit } className="form">
-        <div className={ `form-group ${ this.errorClass(isUsernameValid)}` }>
-          <label htmlFor="username">Name</label>
+        {
+          errorMessage &&
+            <div className="alert alert-info mb-3">
+              <p>{ errorMessage }</p>
+            </div>
+        }       
+        <div className={ `form-group ${ this.errorClass(isEmailValid)}` }>
+          <label htmlFor="email">Email</label>
           <InputField 
-            htmlType="text" 
+            htmlType="email" 
             classes="form-control"
-            name="username" 
+            name="email" 
             onChange={ this.fieldOnChange }
-            value={ username }
+            onBlur={ this.fieldOnChange }
+            value={ email }
           />
           { 
-            !isUsernameValid && <div className="form-control-feedback">{ formErrors.username }</div> 
+            !isEmailValid && <div className="form-control-feedback">{ formErrors.email }</div> 
           }
         </div>
         <div className={ `form-group ${ this.errorClass(isPasswordValid) }` } >
@@ -108,6 +106,7 @@ class LoginForm extends Component {
             classes="form-control" 
             name="password" 
             onChange={ this.fieldOnChange }
+            onBlur={ this.fieldOnChange }
             value={ password }
           />
           { 
@@ -118,18 +117,19 @@ class LoginForm extends Component {
         <Button 
           onClick={ this.onButtonClick } 
           htmlType="submit" 
-          className="my-2 my-sm-0" 
-          title={ submitText } 
+          classes="btn-block mt-5" 
+          title={ submitBtnLabel } 
           color="success" 
-        />
+        />       
       </form>              
     );
   }
 }
 
 LoginForm.propTypes = {
+  errorMessage: PropTypes.string,
   onFormSubmit: PropTypes.func.isRequired, 
-  submitText: PropTypes.string.isRequired   
+  submitBtnLabel: PropTypes.string.isRequired   
 }
 
 export default LoginForm;    

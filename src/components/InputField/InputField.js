@@ -1,12 +1,14 @@
+// eslint-disable-next-line
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 
 function InputField(props) {
-  const { onSubmit, onChange, inputValue, placeHolder, classes, htmlType, name } = props
+  const { onSubmit, onChange, onBlur, inputValue, placeHolder, classes, htmlType, name } = props
   return <input 
     type={ htmlType } 
     onKeyPress={ onSubmit }
     onChange={ onChange }
+    onBlur={ onBlur }
     value={ inputValue }
     className={ classes }
     placeholder={ placeHolder }
@@ -21,7 +23,8 @@ InputField.propTypes = {
   placeHolder: PropTypes.string,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  onBlur: PropTypes.func
 }
 
 InputField.defaultProps = {

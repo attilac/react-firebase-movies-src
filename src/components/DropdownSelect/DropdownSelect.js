@@ -1,8 +1,7 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle } from 'reactstrap';
 
 class DropdownSelect extends Component {
   state = {
@@ -15,43 +14,42 @@ class DropdownSelect extends Component {
     this.setState({ dropdownOpen: !this.state.dropdownOpen })
   } 
 
+  renderChildren() {
+    return React.Children
+      .map(this.props.children, child => {
+        return child.type.name === 'GenreDropdownMenu' ?
+          React.cloneElement(child, {
+            onClick: this.toggle
+          }) 
+          :
+          child
+      })
+  }  
+
   render() {
-    const { items, onClick, currentItem } = this.props,
-      { dropdownOpen } = this.state,
-      dropdownTitle = currentItem ? currentItem : 'Genres',
-      list = items
-        .map((item, index) => 
-          <NavLink 
-            key={ index } 
-            to={ `/genre/${ item }` } 
-            className="dropdown-item" 
-            activeClassName="active" 
-            onClick={ this.toggle 
-            }
-          >
-            { item }
-          </NavLink>        
-        );
+    const { caret, title, icon, classes } = this.props,
+      { dropdownOpen } = this.state
          
-    return <Dropdown className="mr-3" isOpen={ dropdownOpen } toggle={ this.toggle }>
-      <DropdownToggle caret>
-        { dropdownTitle }
+    return <Dropdown className={ classes } isOpen={ dropdownOpen } toggle={ this.toggle }>
+      <DropdownToggle caret={ caret }>
+        { title !== '' ? title : '' }
+        { icon }
       </DropdownToggle>
-      <DropdownMenu>
-        { list }
-      </DropdownMenu>
+      { this.renderChildren() }
     </Dropdown>
   }  
 }
 
 DropdownSelect.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onClick: PropTypes.func,
-  currentItem: PropTypes.string  
+  caret: PropTypes.bool,
+  classes: PropTypes.string,
+  children: PropTypes.object,
+  title: PropTypes.string,
+  icon: PropTypes.object  
 }
 
 DropdownSelect.defaultProps = {
-  currentItem: 'Genres'
+  title: ''
 }
 
 export default DropdownSelect;

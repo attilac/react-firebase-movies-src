@@ -5809,7 +5809,7 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   .navbar.navbar-inverse input::placeholder {
     color: rgba(255, 255, 255, 0.8); }
 
-.navbar.navbar-inverse .dropdown-toggle {
+.navbar.navbar-inverse .btn-secondary {
   background-color: transparent;
   color: rgba(255, 255, 255, 0.8);
   border-color: rgba(255, 255, 255, 0.3); }
@@ -5846,3 +5846,17 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
 
 .font-weight-100 {
   font-weight: 100; }
+
+.fade-enter {
+  opacity: 0; }
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in; }
+
+.fade-leave {
+  opacity: 1; }
+
+.fade-leave.fade-leave-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in; }

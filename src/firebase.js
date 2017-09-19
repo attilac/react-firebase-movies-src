@@ -2,13 +2,13 @@ import firebase from 'firebase'
 
 // Initialize Firebase
 var config = {
-  apiKey: 'AIzaSyDRylymqGElutANKusbIw3Hp2VH7a8DWwk',
-  authDomain: 'just-another-todo-list.firebaseapp.com',
-  databaseURL: 'https://just-another-todo-list.firebaseio.com',
-  projectId: 'just-another-todo-list',
-  storageBucket: 'just-another-todo-list.appspot.com',
-  messagingSenderId: '51649607138'
-};
+  apiKey: 'AIzaSyA4Yq7OcaJ6GGR6111lRpbk437iVJYYXP0',
+  authDomain: 'movie-database-df108.firebaseapp.com',
+  databaseURL: 'https://movie-database-df108.firebaseio.com',
+  projectId: 'movie-database-df108',
+  storageBucket: 'movie-database-df108.appspot.com',
+  messagingSenderId: '57061023306'
+}
 firebase.initializeApp(config);
 
 export default firebase
