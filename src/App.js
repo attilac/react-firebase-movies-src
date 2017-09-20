@@ -197,22 +197,26 @@ class App extends Component {
                             />
                           </LoginPage> 
                         )
-                      )}/>                       
+                      )}/>   
 
-                      <Route exact path='/' render={({ match }) => (
-                        user ? (
-                          <MovieList 
-                            movies={
-                              searchTerm ? 
-                                this.getMoviesBySearchTerm(movies) 
-                                : movies
-                            } 
-                            colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                          />                          
-                        ) : (
-                          <Redirect to="/login"/>
-                        )                  
-                      )}/>
+                      <Route                 
+                        exact 
+                        path='/' 
+                        render={({ match }) => (
+                          user ? (
+                            <MovieList 
+                              movies={
+                                searchTerm ? 
+                                  this.getMoviesBySearchTerm(movies) 
+                                  : movies
+                              } 
+                              colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+                            />                          
+                          ) : (
+                            <Redirect to="/login"/>
+                          )                  
+                        )}
+                      />
 
                       <Route path='/genre/:genreName' render={({ match }) => (
                         user ? (

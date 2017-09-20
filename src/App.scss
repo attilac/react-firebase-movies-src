@@ -13,12 +13,12 @@
 }
 
 .fade-enter {
-  opacity: 0;
+  opacity: 0.01;
 }
 
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 300ms ease-in;
+  transition: opacity .3s ease;
 }
 
 .fade-leave {
@@ -26,6 +26,12 @@
 }
 
 .fade-leave.fade-leave-active {
-  opacity: 0;
-  transition: opacity 300ms ease-in;
+  opacity: 0.01;
+  transition: opacity .3s ease;
+}
+
+.MovieList .row span {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }

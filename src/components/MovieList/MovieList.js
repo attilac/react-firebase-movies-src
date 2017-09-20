@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Movie from '../Movie/Movie.js';
+import { CSSTransitionGroup } from 'react-transition-group'
 
 function MovieList(props) {
   const { movies, colWidth, genreOnClick } = props,
@@ -31,9 +32,15 @@ function MovieList(props) {
       );
 
   return <section className="MovieList">
-    <div className="row">
-      { list }
-    </div>  
+    <div className="row">  
+      <CSSTransitionGroup
+        transitionName="fade"
+        transitionEnterTimeout={300}
+        transitionLeaveTimeout={300}
+      >         
+        { list }
+      </CSSTransitionGroup>          
+    </div>      
   </section>    
 }
 
