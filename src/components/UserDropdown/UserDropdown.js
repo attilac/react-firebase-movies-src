@@ -8,33 +8,32 @@ import PropTypes from 'prop-types'
 function UserDropdown(props) {
   const { user, username, logOutUser } = props
   return (  
-    <DropdownSelect 
-      icon={ <i className="fa fa-user"></i> }
-    >
-      <DropdownMenu 
-        className="dropdown-menu-right"
+    user ?
+      <DropdownSelect 
+        icon={ <i className="fa fa-user-o font-size-xl"></i> }
+        className=""
       >
-        { user &&
+        <DropdownMenu 
+          className="dropdown-menu-right"
+        >
           <DropdownItem 
             header={ true }
           >
             Signed in as { username }
           </DropdownItem>
-        }
-        { user ?
+          
           <a className="dropdown-item" onClick={ logOutUser } href="/">
             Log out
           </a>
-          :
-          <Link 
-            className="dropdown-item" 
-            to="/login"
-          >
-            Log In
-          </Link>
-        }  
-      </DropdownMenu>  
-    </DropdownSelect>  
+        </DropdownMenu>  
+      </DropdownSelect>  
+      :
+      <Link 
+        className="text-white nav-link" 
+        to="/login"
+      >
+        Log In
+      </Link>  
   )  
 }
 
