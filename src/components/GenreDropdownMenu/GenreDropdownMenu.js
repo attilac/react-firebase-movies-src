@@ -6,18 +6,19 @@ import { DropdownMenu } from 'reactstrap'
 
 function GenreDropdownMenu(props) {
   const { items, onClick } = props,
-    list = items
+    list = items 
       .map((item, index) => 
         <NavLink 
-          key={ index } 
-          to={ `/genre/${ item }` } 
+          key={ item.key } 
+          to={ `/genre/${ item.title }` } 
           className="dropdown-item" 
           activeClassName="active" 
           onClick={ onClick }
         >
-          { item }
-        </NavLink>        
+          { item.title }
+        </NavLink>       
       )
+
   return <DropdownMenu>
     { list }  
   </DropdownMenu>

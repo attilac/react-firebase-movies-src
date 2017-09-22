@@ -9,22 +9,24 @@ import SiteHeader from './components/SiteHeader/SiteHeader.js'
 import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieList from './components/MovieList/MovieList.js'
+import MoviePage from './components/MoviePage/MoviePage.js'
 //import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
 //import GenreDropdownMenu from './components/GenreDropdownMenu/GenreDropdownMenu.js'
 import PropsRoute from './components/PropsRoute/PropsRoute.js'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
 import Spinner from './components/Spinner/Spinner'
 import utils from './scripts/utils.js'
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './App.css'
-
-//import DummyComp from './components/DummyComp.js';
+import Movies from './movies.js'
 
 class App extends Component {
 
   state = {
     errorMessage: '',
     genres: [],
+    genreObjectList: [],
     movies: [],
     moviesByGenre: [],
     password: '',
@@ -34,7 +36,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getDataFromApi()
+    //this.getDataFromApi()
+    //this.childAdded()
+    //this.postMovies()
 
     firebase
       .auth()
@@ -50,6 +54,10 @@ class App extends Component {
             username: email
           })
           console.log(user)
+
+          this.getGenresFromFirebase()
+          //this.getMoviesFromFirebase()  
+
         } else {
           this.setState({ 
             user: user,
@@ -64,6 +72,72 @@ class App extends Component {
       .auth()
       .unsubscribeAuthStateChanged()
   } 
+
+  childAdded = () => {
+    firebase.database()
+      .ref('movies')
+      .orderByChild('date')
+      .limitToLast()      
+      .on('child_added', (snapshot) => {
+        //console.log(snapshot.key)
+        let movies = [...this.state.movies]
+        const movie = snapshot.val()
+        movie['key'] = snapshot.key   
+        movies.push(movie)
+        console.log(movies)
+        //console.log('Added movie!')
+        this.setState({ movies: movies })  
+        //this.setState({ genres: this.getGenresFromDatabase() })
+      })
+  }  
+
+  getMoviesFromFirebase = () => {
+    firebase.database()
+      .ref('movies')
+      .limitToLast(50)      
+      .on('child_added', (snapshot) => {
+        //console.log(snapshot.key)
+        let movies = [...this.state.movies]
+        const movie = snapshot.val()
+        movie['key'] = snapshot.key   
+        movies.push(movie)
+        //console.log(movies)
+        //console.log('Added movie!')
+        this.setState({ movies: movies })  
+      }) 
+  }
+
+  getGenresFromFirebase = () => {
+    firebase.database()
+      .ref('genres')   
+      .on('child_added', (snapshot) => {
+        let genres = [...this.state.genres]
+        let genre = {
+          key: snapshot.key,
+          title:  snapshot.val().title
+        }
+        genres.push(genre)
+        //console.log('Added genre!')
+        this.setState({ genres: genres }) 
+        //console.log(this.state.genres) 
+      })       
+      /*
+      .once('value', (snapshot) => {
+        //console.log(snapshot.val())  
+        
+        let genres = []
+        for (var prop in snapshot.val()) {
+          let genre = {
+            key: prop,
+            title: snapshot.val()[prop].title
+          }
+          genres.push(genre)
+        } 
+        console.log(genres)  
+        this.setState({ genres: genres })
+        console.log('Fetched genres!')
+      })   */  
+  }
 
   createUser = () => {
     const { email, password } = this.state
@@ -124,8 +198,9 @@ class App extends Component {
     this.setState({ searchTerm: event.target.value })
   }  
 
-  genreOnClick = (event) => {
-    this.setState({ genre: event.target.innerHTML })   
+  onGenreClick = (event) => {
+    //console.log(event.target)
+    //this.setState({ genre: event.target.innerHTML })   
   }
 
   getMoviesByGenre = (genre) => {
@@ -175,6 +250,7 @@ class App extends Component {
                   searchOnSubmit={ this.searchOnSubmit }
                   searchOnChange={ this.searchOnChange }
                   logOutUser={ this.logOutUser }
+                  onGenreClick={ this.onGenreClick }
                 />                                                 
             } 
 
@@ -199,6 +275,25 @@ class App extends Component {
                         )
                       )}/>   
 
+                      <PrivateRoute
+                        exact
+                        path="/"
+                        component={ MoviePage }
+                        user={ user }
+                        genres={ genres }
+                        searchTerm={ searchTerm }
+                      /> 
+
+                      <PrivateRoute
+                        exact
+                        path="/genre/:genreName"
+                        component={ MoviePage }
+                        user={ user }
+                        genres={ genres }
+                        searchTerm={ searchTerm }
+                      />                       
+
+                      { /*
                       <Route                 
                         exact 
                         path='/' 
@@ -211,6 +306,7 @@ class App extends Component {
                                   : movies
                               } 
                               colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+                              genres={genres}
                             />                          
                           ) : (
                             <Redirect to="/login"/>
@@ -223,16 +319,20 @@ class App extends Component {
                           <MovieList 
                             movies={ 
                               searchTerm ? 
-                                this.getMoviesBySearchTerm(this.getMoviesByGenre(match.params.genreName)) 
+                                this.getMoviesBySearchTerm(movies) 
                                 :
-                                this.getMoviesByGenre(match.params.genreName)
+                                movies
                             } 
                             colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+                            genres={genres}
                           />                          
                         ) : (
                           <Redirect to="/login"/>                        
                         )                    
                       )}/>
+
+                      */
+                      }                      
                      
                     </Switch>   
                 }

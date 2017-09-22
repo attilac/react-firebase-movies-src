@@ -1,25 +1,36 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import Movie from '../Movie/Movie.js';
 import { CSSTransitionGroup } from 'react-transition-group'
 
-function MovieList(props) {
-  const { movies, colWidth, genreOnClick } = props,
+import Movie from '../Movie/Movie.js';
+import PropTypes from 'prop-types'
+import Spinner from '../Spinner/Spinner'
 
-    getGenreLinkList = function(genres){
-      const genreLinks = genres
+function MovieList(props) {
+  const { movies, colWidth, genreOnClick, genres } = props,
+    getGenreNameFromKey = function(key) {     
+      return genres
+        .map((item, index) => { 
+          if(item.key === key ){     
+            return item.title
+          }  
+        }).filter(x => x !== undefined).join('')
+    },
+    getGenreLinkList = function(mGenres) {
+      
+      const genreLinks = Object.keys(mGenres)
         .map((genre, index) =>
           <li key={ index } className="list-inline-item movie-genre-item">
-            <Link className="genre-link" to={ `/genre/${genre}`} onClick={ genreOnClick }>
-              { genre }
+            <Link className="genre-link" to={ `/genre/${getGenreNameFromKey(genre)}`} onClick={ genreOnClick }>
+              { getGenreNameFromKey(genre) }
             </Link>
           </li>
         )
       return <ul className="list-inline movie-genre-list">
         { genreLinks }
       </ul>
+      
     },   
 
     list = movies
@@ -31,20 +42,23 @@ function MovieList(props) {
         </div>  
       );
 
-  return <section className="MovieList">
-    <div className="row">  
-      <CSSTransitionGroup
-        transitionName="fade"
-        transitionEnterTimeout={300}
-        transitionLeaveTimeout={300}
-      >         
-        { list }
-      </CSSTransitionGroup>          
-    </div>      
-  </section>    
+  return (
+    <section className="MovieList">
+      <div className="row">  
+        <CSSTransitionGroup
+          transitionName="fade"
+          transitionEnterTimeout={300}
+          transitionLeaveTimeout={300}
+        >         
+          { list }
+        </CSSTransitionGroup>          
+      </div>      
+    </section>
+  ) 
 }
 
 MovieList.propTypes = {
+  genres: PropTypes.arrayOf(PropTypes.object).isRequired, 
   movies: PropTypes.arrayOf(PropTypes.object).isRequired,
   colWidth: PropTypes.string,
   genreOnClick: PropTypes.func

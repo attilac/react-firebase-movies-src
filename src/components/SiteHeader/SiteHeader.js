@@ -18,7 +18,8 @@ function SiteHeader(props) {
     searchTerm,
     searchOnSubmit,
     searchOnChange,
-    location
+    location,
+    onGenreClick
   } = props
 
   return (
@@ -35,6 +36,7 @@ function SiteHeader(props) {
         >
           <GenreDropdownMenu
             items={ genres }
+            onClick={ onGenreClick }
           />  
         </DropdownSelect> 
       }
@@ -66,7 +68,8 @@ SiteHeader.propTypes = {
   searchTerm: PropTypes.string,
   searchOnSubmit: PropTypes.func,
   searchOnChange: PropTypes.func,
-  location: PropTypes.object
+  location: PropTypes.object,
+  onGenreClick: PropTypes.func
 }
 
 SiteHeader.defaultProps = {

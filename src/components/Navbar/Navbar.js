@@ -14,7 +14,7 @@ class Navbar extends Component {
   }
 
   render() {
-    const { title, children, isOpen } = this.props,
+    const { title, children } = this.props,
       { collapsed } = this.state
 
     return (
