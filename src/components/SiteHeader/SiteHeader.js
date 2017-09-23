@@ -26,10 +26,11 @@ function SiteHeader(props) {
     <Navbar title={ navbarTitle }>
       { user &&
         <DropdownSelect 
-          title={ 
+          title={ 'Genres'
+            /*
             location.pathname !== '/' ? 
               location.pathname.substring(location.pathname.lastIndexOf('/') + 1) 
-              : 'Genres' 
+              : 'Genres' */
           } 
           classes="mr-3"
           caret={ true }

@@ -9,28 +9,37 @@ import Spinner from '../Spinner/Spinner'
 
 function MovieList(props) {
   const { movies, colWidth, genreOnClick, genres } = props,
-    getGenreNameFromKey = function(key) {     
+    getGenreNameFromKey = function(key) { 
+      //console.log(key)
       return genres
+        /*  
         .map((item, index) => { 
           if(item.key === key ){     
             return item.title
-          }  
-        }).filter(x => x !== undefined).join('')
+          }   
+        }).filter(x => x !== undefined).join('') 
+        */
+       
+        .filter((genre) => {
+          return genre.key === key
+        })
+        .map((item, index) => {  
+          return item.title
+        })
     },
     getGenreLinkList = function(mGenres) {
-      
+      //console.log(mGenres)     
       const genreLinks = Object.keys(mGenres)
-        .map((genre, index) =>
+        .map((key, index) =>
           <li key={ index } className="list-inline-item movie-genre-item">
-            <Link className="genre-link" to={ `/genre/${getGenreNameFromKey(genre)}`} onClick={ genreOnClick }>
-              { getGenreNameFromKey(genre) }
+            <Link className="genre-link" to={ `/genre/${key}`} onClick={ genreOnClick }>
+              { getGenreNameFromKey(key)}
             </Link>
           </li>
         )
       return <ul className="list-inline movie-genre-list">
         { genreLinks }
       </ul>
-      
     },   
 
     list = movies

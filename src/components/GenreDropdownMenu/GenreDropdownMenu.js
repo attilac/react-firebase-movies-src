@@ -10,7 +10,7 @@ function GenreDropdownMenu(props) {
       .map((item, index) => 
         <NavLink 
           key={ item.key } 
-          to={ `/genre/${ item.title }` } 
+          to={ `/genre/${ item.key }` } 
           className="dropdown-item" 
           activeClassName="active" 
           onClick={ onClick }

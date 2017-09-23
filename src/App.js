@@ -107,9 +107,28 @@ class App extends Component {
       }) 
   }
 
+  getMoviesByGenre = (genreId) => {
+    console.log(genreId)
+    firebase.database()
+      .ref('movies')
+      .orderByChild(`genres/${genreId}`)
+      .equalTo(true)
+      .limitToLast(50)
+      .on('child_added', (snapshot) => {
+        let movies = [...this.state.movies]
+        const movie = snapshot.val()
+        movie['key'] = snapshot.key   
+        movies.push(movie)
+        //console.log(movies)
+        //console.log('Added movie!')
+        this.setState({ movies: movies })            
+      }) 
+  }   
+
   getGenresFromFirebase = () => {
     firebase.database()
       .ref('genres')   
+      /*
       .on('child_added', (snapshot) => {
         let genres = [...this.state.genres]
         let genre = {
@@ -120,8 +139,9 @@ class App extends Component {
         //console.log('Added genre!')
         this.setState({ genres: genres }) 
         //console.log(this.state.genres) 
-      })       
-      /*
+      })   
+      */    
+      
       .once('value', (snapshot) => {
         //console.log(snapshot.val())  
         
@@ -133,10 +153,10 @@ class App extends Component {
           }
           genres.push(genre)
         } 
-        console.log(genres)  
+        //console.log(genres)  
         this.setState({ genres: genres })
         console.log('Fetched genres!')
-      })   */  
+      })     
   }
 
   createUser = () => {
@@ -202,14 +222,14 @@ class App extends Component {
     //console.log(event.target)
     //this.setState({ genre: event.target.innerHTML })   
   }
-
+  /*
   getMoviesByGenre = (genre) => {
     const { movies } = this.state
     return movies
       .filter(movie => 
         movie.genres.includes(genre)
       )
-  }
+  }*/
 
   getMoviesBySearchTerm(movies) {
     const { searchTerm } = this.state
@@ -274,7 +294,7 @@ class App extends Component {
                           </LoginPage> 
                         )
                       )}/>   
-
+                      
                       <PrivateRoute
                         exact
                         path="/"
@@ -303,7 +323,8 @@ class App extends Component {
                               movies={
                                 searchTerm ? 
                                   this.getMoviesBySearchTerm(movies) 
-                                  : movies
+                                  : 
+                                  movies
                               } 
                               colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
                               genres={genres}
@@ -319,8 +340,8 @@ class App extends Component {
                           <MovieList 
                             movies={ 
                               searchTerm ? 
-                                this.getMoviesBySearchTerm(movies) 
-                                :
+                                this.getMoviesBySearchTerm(movies)
+                                : 
                                 movies
                             } 
                             colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
@@ -330,10 +351,9 @@ class App extends Component {
                           <Redirect to="/login"/>                        
                         )                    
                       )}/>
-
                       */
-                      }                      
-                     
+                      }
+                                        
                     </Switch>   
                 }
               </div>  

@@ -9,24 +9,36 @@ class MoviePage extends Component {
 
   state = {
     movies: [],
-    moviesByGenre: []
+    moviesByGenre: [],
+    genreId: ''
   }
 
-  componentDidMount() {
-    this.getMoviesFromFirebase()       
+  componentDidMount() { 
+    this.getMoviesByGenre()    
   } 
 
+  componentWillMount() {
+    //this.getMoviesByGenre()  
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps) 
+    //this.setState({ movies: [] })
+  }
+
   getMoviesByGenre = () => {
+    const genreId = this.props.match.params.genreName
     firebase.database()
       .ref('movies')
-      .orderByChild('genres/-KuZwZPOrOZXdAGk73ZQ')
+      .orderByChild(`genres/${genreId}`)
       .equalTo(true)
+      .limitToLast(50)
       .on('child_added', (snapshot) => {
         let movies = [...this.state.movies]
         const movie = snapshot.val()
         movie['key'] = snapshot.key   
         movies.push(movie)
-        console.log(movies)
+        //console.log(movies)
         //console.log('Added movie!')
         this.setState({ movies: movies })            
       }) 
@@ -57,7 +69,7 @@ class MoviePage extends Component {
  
   render() {
     const { movies } = this.state,
-      { searchTerm, genres, genre } = this.props
+      { searchTerm, genres } = this.props
 
     return ( 
       movies ?   
