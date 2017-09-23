@@ -27,18 +27,12 @@ class App extends Component {
     errorMessage: '',
     genres: [],
     genreObjectList: [],
-    movies: [],
-    moviesByGenre: [],
     password: '',
-    searchTerm: '',
     user: undefined,
     username: ''
   }
 
   componentDidMount() {
-    //this.getDataFromApi()
-    //this.childAdded()
-    //this.postMovies()
 
     firebase
       .auth()
@@ -46,8 +40,6 @@ class App extends Component {
         if(user) {
           //const displayName = user.displayName;
           const email = user.email;
-          //const emailVerified = user.emailVerified;
-          //const photoURL = user.photoURL;
           //const uid = user.uid; //KEY! UID!         
           this.setState({ 
             user: user,
@@ -56,7 +48,6 @@ class App extends Component {
           console.log(user)
 
           this.getGenresFromFirebase()
-          //this.getMoviesFromFirebase()  
 
         } else {
           this.setState({ 
@@ -72,58 +63,6 @@ class App extends Component {
       .auth()
       .unsubscribeAuthStateChanged()
   } 
-
-  childAdded = () => {
-    firebase.database()
-      .ref('movies')
-      .orderByChild('date')
-      .limitToLast()      
-      .on('child_added', (snapshot) => {
-        //console.log(snapshot.key)
-        let movies = [...this.state.movies]
-        const movie = snapshot.val()
-        movie['key'] = snapshot.key   
-        movies.push(movie)
-        console.log(movies)
-        //console.log('Added movie!')
-        this.setState({ movies: movies })  
-        //this.setState({ genres: this.getGenresFromDatabase() })
-      })
-  }  
-
-  getMoviesFromFirebase = () => {
-    firebase.database()
-      .ref('movies')
-      .limitToLast(50)      
-      .on('child_added', (snapshot) => {
-        //console.log(snapshot.key)
-        let movies = [...this.state.movies]
-        const movie = snapshot.val()
-        movie['key'] = snapshot.key   
-        movies.push(movie)
-        //console.log(movies)
-        //console.log('Added movie!')
-        this.setState({ movies: movies })  
-      }) 
-  }
-
-  getMoviesByGenre = (genreId) => {
-    console.log(genreId)
-    firebase.database()
-      .ref('movies')
-      .orderByChild(`genres/${genreId}`)
-      .equalTo(true)
-      .limitToLast(50)
-      .on('child_added', (snapshot) => {
-        let movies = [...this.state.movies]
-        const movie = snapshot.val()
-        movie['key'] = snapshot.key   
-        movies.push(movie)
-        //console.log(movies)
-        //console.log('Added movie!')
-        this.setState({ movies: movies })            
-      }) 
-  }   
 
   getGenresFromFirebase = () => {
     firebase.database()
@@ -222,14 +161,14 @@ class App extends Component {
     //console.log(event.target)
     //this.setState({ genre: event.target.innerHTML })   
   }
-  /*
+
   getMoviesByGenre = (genre) => {
     const { movies } = this.state
     return movies
       .filter(movie => 
         movie.genres.includes(genre)
       )
-  }*/
+  }
 
   getMoviesBySearchTerm(movies) {
     const { searchTerm } = this.state
@@ -250,7 +189,7 @@ class App extends Component {
   }     
 
   render() {
-    const { searchTerm, movies, genres } = this.state,
+    const { searchTerm, genres } = this.state,
       { username, user, errorMessage } = this.state
     return (
       <Router> 
@@ -311,49 +250,7 @@ class App extends Component {
                         user={ user }
                         genres={ genres }
                         searchTerm={ searchTerm }
-                      />                       
-
-                      { /*
-                      <Route                 
-                        exact 
-                        path='/' 
-                        render={({ match }) => (
-                          user ? (
-                            <MovieList 
-                              movies={
-                                searchTerm ? 
-                                  this.getMoviesBySearchTerm(movies) 
-                                  : 
-                                  movies
-                              } 
-                              colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                              genres={genres}
-                            />                          
-                          ) : (
-                            <Redirect to="/login"/>
-                          )                  
-                        )}
-                      />
-
-                      <Route path='/genre/:genreName' render={({ match }) => (
-                        user ? (
-                          <MovieList 
-                            movies={ 
-                              searchTerm ? 
-                                this.getMoviesBySearchTerm(movies)
-                                : 
-                                movies
-                            } 
-                            colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
-                            genres={genres}
-                          />                          
-                        ) : (
-                          <Redirect to="/login"/>                        
-                        )                    
-                      )}/>
-                      */
-                      }
-                                        
+                      />                                                              
                     </Switch>   
                 }
               </div>  

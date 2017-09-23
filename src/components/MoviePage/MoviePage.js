@@ -9,48 +9,71 @@ class MoviePage extends Component {
 
   state = {
     movies: [],
-    moviesByGenre: [],
-    genreId: ''
+    moviesByGenre: []
   }
 
-  componentDidMount() { 
-    this.getMoviesByGenre()    
+  componentDidMount() {   
+    //this.getMoviesByGenre(this.props.match.params.genreName)
   } 
 
-  componentWillMount() {
-    //this.getMoviesByGenre()  
+  componentWillMount() { 
+    //console.log(this.props.match.params.genreName)
+    this.props.match.params.genreName === undefined ?
+      this.getMoviesFromFirebase()
+      :
+      this.getMoviesByGenre(this.props.match.params.genreName)
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps) 
-    //this.setState({ movies: [] })
+  componentWillReceiveProps(nextProps) { 
+    //console.log('componentWillReceiveProps')
+    if(nextProps.match.params.genreName === undefined){
+      this.getMoviesFromFirebase()
+    } else if (nextProps.match.params.genreName !== this.props.match.params.genreName) { 
+      this.setState({ movies: [] })
+      this.getMoviesByGenre(nextProps.match.params.genreName)
+    }
   }
 
-  getMoviesByGenre = () => {
-    const genreId = this.props.match.params.genreName
+  componentWillUpdate(nextProps, nextState) {
+    //console.log('componentWillUpdate')
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    //console.log('componentDidUpdate')  
+    //console.log(prevProps.match.params.genreName) 
+  } 
+
+  componentWillUnmount() {
+    //console.log('componentWillUnmount')      
+  } 
+
+  getMoviesByGenre = (genreId) => {
+    let movies = []
     firebase.database()
       .ref('movies')
       .orderByChild(`genres/${genreId}`)
       .equalTo(true)
       .limitToLast(50)
       .on('child_added', (snapshot) => {
-        let movies = [...this.state.movies]
+        //let movies = [...this.state.movies]
         const movie = snapshot.val()
         movie['key'] = snapshot.key   
         movies.push(movie)
         //console.log(movies)
         //console.log('Added movie!')
-        this.setState({ movies: movies })            
-      }) 
+        this.setState({ movies: movies })  
+      })  
   }         
 
   getMoviesFromFirebase = () => {
+    let movies = []
     firebase.database()
       .ref('movies')
+      //.orderByChild('year')
       .limitToLast(50)      
       .on('child_added', (snapshot) => {
         //console.log(snapshot.key)
-        let movies = [...this.state.movies]
+        //let movies = [...this.state.movies]
         const movie = snapshot.val()
         movie['key'] = snapshot.key   
         movies.push(movie)
@@ -72,7 +95,7 @@ class MoviePage extends Component {
       { searchTerm, genres } = this.props
 
     return ( 
-      movies ?   
+      movies.length ?   
         <MovieList 
           movies={
             searchTerm ? 
