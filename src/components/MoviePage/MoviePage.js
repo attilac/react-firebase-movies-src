@@ -5,6 +5,8 @@ import firebase from '../../firebase.js'
 import MovieList from '../MovieList/MovieList.js'
 import Spinner from '../Spinner/Spinner'
 
+import utils from '../../scripts/utils.js'
+
 class MoviePage extends Component {
 
   state = {
@@ -44,7 +46,10 @@ class MoviePage extends Component {
   } 
 
   componentWillUnmount() {
-    //console.log('componentWillUnmount')      
+    firebase.database()
+      .ref('movies')
+      .off()    
+    console.log('componentWillUnmount')      
   } 
 
   getMoviesByGenre = (genreId) => {
@@ -81,6 +86,18 @@ class MoviePage extends Component {
         //console.log('Added movie!')
         this.setState({ movies: movies })  
       }) 
+  }  
+
+  getMoviesFromHeroku() {
+    fetch('https://fend-api.herokuapp.com/movies')
+      .then(response => response.json())
+      .then(json => { 
+        // console.log(json)
+        const moviesSorted = utils.sortObjectsByKey(json, 'year', 'DESC')
+        this.setState({ movies: moviesSorted })
+        this.setState({ genres: this.getGenresFromDatabase() })
+        // console.log(this.state.movies)
+      })
   }        
 
   getMoviesBySearchTerm(movies) {
@@ -88,7 +105,18 @@ class MoviePage extends Component {
     return movies
       .filter(movie => movie.title
         .includes(searchTerm)) 
-  }        
+  }  
+
+  getMoviesPropertyList(key) {
+    return this.state.movies
+      .map((movie) =>
+        movie[key]
+      )
+  }  
+  
+  getGenresFromDatabase() {
+    return utils.sortArray(utils.getUniqueArray(utils.getConcatArray(this.getMoviesPropertyList('genres'))))
+  }         
  
   render() {
     const { movies } = this.state,
@@ -102,7 +130,7 @@ class MoviePage extends Component {
               this.getMoviesBySearchTerm(movies) 
               : movies
           } 
-          colWidth="col-6 col-sm-3 col-md-3 col-lg-2 mb-4"
+          colWidth="col-6 col-sm-4 col-md-3 col-lg-2 mb-4"
           genres={genres}
         />   
         : 
@@ -114,6 +142,7 @@ class MoviePage extends Component {
 MoviePage.propTypes = {
   genres: PropTypes.array,
   genre: PropTypes.string,
+  match: PropTypes.object,
   searchTerm: PropTypes.string
 }
 

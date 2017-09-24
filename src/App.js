@@ -2,24 +2,26 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import firebase from './firebase.js'
 //import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
+
 //import Navbar from './components/Navbar/Navbar.js'
 import SiteHeader from './components/SiteHeader/SiteHeader.js'
 //import InputField from './components/InputField/InputField.js'
 //import UserDropdown from './components/UserDropdown/UserDropdown.js'
 import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
-import MovieList from './components/MovieList/MovieList.js'
+//import MovieList from './components/MovieList/MovieList.js'
 import MoviePage from './components/MoviePage/MoviePage.js'
+//import Movies from './movies.js'
 //import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
 //import GenreDropdownMenu from './components/GenreDropdownMenu/GenreDropdownMenu.js'
 import PropsRoute from './components/PropsRoute/PropsRoute.js'
 import PrivateRoute from './components/PrivateRoute/PrivateRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
 import Spinner from './components/Spinner/Spinner'
-import utils from './scripts/utils.js'
+
+//import utils from './scripts/utils.js'
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css'
 import './App.css'
-import Movies from './movies.js'
 
 class App extends Component {
 
@@ -135,18 +137,6 @@ class App extends Component {
       }) 
   } 
 
-  getDataFromApi() {
-    fetch('https://fend-api.herokuapp.com/movies')
-      .then(response => response.json())
-      .then(json => { 
-        // console.log(json)
-        const moviesSorted = utils.sortObjectsByKey(json, 'year', 'DESC')
-        this.setState({ movies: moviesSorted })
-        this.setState({ genres: this.getGenresFromDatabase() })
-        // console.log(this.state.movies)
-      })
-  }
-
   searchOnSubmit = (event) => {
     if (event.key === 'Enter') {
       this.setState({ searchTerm: event.target.value })
@@ -160,33 +150,7 @@ class App extends Component {
   onGenreClick = (event) => {
     //console.log(event.target)
     //this.setState({ genre: event.target.innerHTML })   
-  }
-
-  getMoviesByGenre = (genre) => {
-    const { movies } = this.state
-    return movies
-      .filter(movie => 
-        movie.genres.includes(genre)
-      )
-  }
-
-  getMoviesBySearchTerm(movies) {
-    const { searchTerm } = this.state
-    return movies
-      .filter(movie => movie.title
-        .includes(searchTerm)) 
-  }
-
-  getMoviesPropertyList(key) {
-    return this.state.movies
-      .map((movie) =>
-        movie[key]
-      )
-  } 
-
-  getGenresFromDatabase() {
-    return utils.sortArray(utils.getUniqueArray(utils.getConcatArray(this.getMoviesPropertyList('genres'))))
-  }     
+  }    
 
   render() {
     const { searchTerm, genres } = this.state,

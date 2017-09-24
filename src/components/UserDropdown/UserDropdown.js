@@ -6,12 +6,12 @@ import { DropdownMenu, DropdownItem } from 'reactstrap'
 import PropTypes from 'prop-types'
 
 function UserDropdown(props) {
-  const { user, username, logOutUser } = props
+  const { user, username, logOutUser, classes } = props
   return (  
     user ?
       <DropdownSelect 
         icon={ <i className="fa fa-user-o font-size-xl"></i> }
-        className=""
+        classes={ classes }
       >
         <DropdownMenu 
           className="dropdown-menu-right"
@@ -29,7 +29,7 @@ function UserDropdown(props) {
       </DropdownSelect>  
       :
       <Link 
-        className="text-white nav-link" 
+        className="text-white nav-link login-link ml-auto" 
         to="/login"
       >
         Log In
@@ -38,6 +38,7 @@ function UserDropdown(props) {
 }
 
 UserDropdown.propTypes = {
+  classes: PropTypes.string,
   user: PropTypes.object,
   username: PropTypes.string,
   logOutUser: PropTypes.func

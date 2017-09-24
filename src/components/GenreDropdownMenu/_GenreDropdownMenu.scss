@@ -1,0 +1,27 @@
+  .genre-dropdown {
+
+    .btn-secondary  {
+      background-color: rgba(0, 0, 0, 0);
+      color: rgba(255, 255, 255, 0.8);
+      border-color: rgba(255, 255, 255, 0.3); 
+
+      display: block;
+      width: 100%;
+      text-align: left;
+
+      @media(min-width: 768px) {
+        display: inline-block;
+        text-align: center;
+        width: auto;
+      }
+
+      &:focus,
+      &:active,
+      &.active {
+        box-shadow: none;
+        background-color: rgba(0, 0, 0, 0);
+        border-color: rgba(255, 255, 255, 0.3); 
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }

@@ -10,36 +10,62 @@ import PropTypes from 'prop-types'
 function SiteHeader(props) {
 
   const { 
-    navbarTitle,
-    user, 
-    genres, 
-    logOutUser, 
-    username,
-    searchTerm,
-    searchOnSubmit,
-    searchOnChange,
-    location,
-    onGenreClick
-  } = props
+      navbarTitle,
+      user, 
+      genres, 
+      logOutUser, 
+      username,
+      searchTerm,
+      searchOnSubmit,
+      searchOnChange,
+      location,
+      onGenreClick
+    } = props,
+    userDropdown = () => {
+      return (
+        <UserDropdown
+          user={ user }
+          username={ username }
+          logOutUser={ logOutUser }
+          classes={ 'user-dropdown'}
+        />
+      )
+    },
+    genreNameFromLocation = () => {
+      return genres       
+        .filter((genre) => {
+          return genre.key === location.pathname.substring(location.pathname.lastIndexOf('/') + 1)
+        })
+        .map((item, index) => {  
+          return item.title
+        }).join('')       
+    }
 
   return (
-    <Navbar title={ navbarTitle }>
+    <Navbar 
+      title={ navbarTitle }
+      menuItem={ userDropdown() }
+      classes={ !user ? 'flex-row' : ''}
+      user={ user }
+    >
       { user &&
-        <DropdownSelect 
-          title={ 'Genres'
-            /*
-            location.pathname !== '/' ? 
-              location.pathname.substring(location.pathname.lastIndexOf('/') + 1) 
-              : 'Genres' */
-          } 
-          classes="mr-3"
-          caret={ true }
-        >
-          <GenreDropdownMenu
-            items={ genres }
-            onClick={ onGenreClick }
-          />  
-        </DropdownSelect> 
+        <ul className="navbar-nav">
+          <li className="navbar-item my-3 my-md-0">
+            <DropdownSelect 
+              title={ location.pathname !== '/' ? 
+                genreNameFromLocation() 
+                : 'Genres'
+              } 
+              classes="mr-md-3 genre-dropdown"
+              caret={ true }
+            >
+              <GenreDropdownMenu
+                items={ genres }
+                onClick={ onGenreClick }
+              />  
+            </DropdownSelect> 
+          </li>
+        </ul>  
       }
       { user &&
         <InputField 
@@ -51,11 +77,6 @@ function SiteHeader(props) {
           name="movieSearch"
         />
       }
-      <UserDropdown
-        user={ user }
-        username={ username }
-        logOutUser={ logOutUser }
-      />   
     </Navbar>  
   )    
 }

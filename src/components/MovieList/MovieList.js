@@ -1,11 +1,10 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 import Movie from '../Movie/Movie.js';
-import PropTypes from 'prop-types'
-import Spinner from '../Spinner/Spinner'
 
 function MovieList(props) {
   const { movies, colWidth, genreOnClick, genres } = props,
