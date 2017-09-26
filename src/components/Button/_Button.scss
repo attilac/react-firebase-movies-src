@@ -2,9 +2,30 @@
   border-bottom-width: 4px;
 }
 
+.btn-info.btn-flat-shadow {
+  border-bottom-color: darken($brand-info, 15%);
+  &:hover {
+    border-bottom-color: darken($brand-info, 25%);
+  }
+}
+
 .btn-danger.btn-flat-shadow {
   border-bottom-color: darken($brand-danger, 15%);
   &:hover {
     border-bottom-color: darken($brand-danger, 25%);
+  }
+}
+
+.btn-success.btn-flat-shadow {
+  border-bottom-color: darken($brand-success, 15%);
+  &:hover {
+    border-bottom-color: darken($brand-success, 25%);
+  }
+}
+
+.btn-secondary.btn-flat-shadow {
+  border-bottom-color: darken($btn-secondary-color, 15%);
+  &:hover {
+    border-bottom-color: darken($btn-secondary-color, 25%);
   }
 }

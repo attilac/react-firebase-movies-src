@@ -59,6 +59,7 @@ class MoviePage extends Component {
       .orderByChild(`genres/${genreId}`)
       .equalTo(true)
       .limitToLast(12)
+      /*
       .on('child_added', (snapshot) => {
         //let movies = [...this.state.movies]
         const movie = snapshot.val()
@@ -68,7 +69,7 @@ class MoviePage extends Component {
         //console.log('Added movie!')
         this.setState({ movies: movies })  
       }) 
-      /*
+      */
       .on('value', (snapshot) => {
         //console.log(snapshot.val())      
         let movies = []
@@ -80,7 +81,7 @@ class MoviePage extends Component {
         this.setState({ movies: movies })
         console.log('Fetched Movies!')
       })  
-      */        
+        
   }         
 
   getMoviesFromFirebase = () => {
@@ -88,7 +89,8 @@ class MoviePage extends Component {
     firebase.database()
       .ref('movies')
       //.orderByChild('year')
-      .limitToLast(12)      
+      .limitToLast(12)  
+      /*    
       .on('child_added', (snapshot) => {
         //console.log(snapshot.key)
         //let movies = [...this.state.movies]
@@ -99,6 +101,18 @@ class MoviePage extends Component {
         //console.log('Added movie!')
         this.setState({ movies: movies })  
       }) 
+      */
+      .on('value', (snapshot) => {
+        //console.log(snapshot.val())      
+        let movies = []
+        for (var prop in snapshot.val()) {
+          let movie = snapshot.val()[prop]
+          movie['key'] = prop
+          movies.push(movie)
+        } 
+        this.setState({ movies: movies })
+        console.log('Fetched Movies!')
+      })        
   }  
 
   getMoviesFromHeroku() {
@@ -133,7 +147,7 @@ class MoviePage extends Component {
  
   render() {
     const { movies } = this.state,
-      { searchTerm, genres, genreOnClick, getGenreNameFromKey, getGenreLinkList, getActorList } = this.props
+      { searchTerm, genres, genreOnClick, getGenreNameFromKey, getGenreLinkList, getActorList, user, addMovieToFavorites } = this.props
     utils.sortObjectsByKey(movies, 'releaseDate', 'DESC' )
 
     return ( 
@@ -149,7 +163,9 @@ class MoviePage extends Component {
           genreOnClick={ genreOnClick }
           getGenreNameFromKey={ getGenreNameFromKey }
           getGenreLinkList={ getGenreLinkList }
-          getActorList={ getActorList }          
+          getActorList={ getActorList }
+          user={ user }  
+          addMovieToFavorites={ addMovieToFavorites }        
         />   
         : 
         <Spinner />      
@@ -158,6 +174,7 @@ class MoviePage extends Component {
 }
 
 MoviePage.propTypes = {
+  addMovieToFavorites: PropTypes.func,
   genres: PropTypes.array,
   genre: PropTypes.string,
   genreOnClick: PropTypes.func,
@@ -165,7 +182,8 @@ MoviePage.propTypes = {
   getGenreLinkList: PropTypes.func,
   getActorList: PropTypes.func,  
   match: PropTypes.object,
-  searchTerm: PropTypes.string
+  searchTerm: PropTypes.string,
+  user: PropTypes.object
 }
 
 export default MoviePage  

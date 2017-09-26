@@ -16,6 +16,18 @@
   transition: opacity .3s ease-out;
 }
 
+.movie-detail-appear {
+  opacity: 0;
+  //transform: translateY(0%);
+  //transform-origin: bottom;
+  transition: opacity .3s ease-out;
+}
+
+.movie-detail-appear-active{
+  //transform: translateY(-100%);
+  opacity: 1;
+}
+
 .MovieDetail span {
   width: 100%;
   display: block;

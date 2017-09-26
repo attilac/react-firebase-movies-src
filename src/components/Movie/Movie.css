@@ -39,16 +39,32 @@
 }
 
 .movie-title {
-	font-size: 1rem;
-	line-height: 1.125rem;
+	font-size: 1.125rem;
+	font-weight: 500;
+	line-height: 1.5rem;
 	min-height: 2.25rem;
+}
+
+a.movie-link {
+	color: #333;	
+	&:hover {
+		color: #000;
+	}
 }
 
 .movie-content {
 	padding: 0.5rem;
-	min-height: 8rem;
+	min-height: 9rem;
 }
 
-.genre-link {
+a.genre-link {
 	font-size: .875rem;
+	color: rgba(17, 0, 0, 0.6);
+	&:hover {
+		color: rgba(17, 0, 0, 1);
+	}	
+}
+
+.card-footer {
+	padding: .5rem;
 }

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import './Movie.css';
 
 function Movie(props) {
-  const {title, poster, year, children, movieId, genreLinks } = props
+  const {title, poster, year, children, movieId, genreLinks, addToFavoriteButton } = props
   return <div className="card">
     <Link 
       className="movie-img-link" 
@@ -30,10 +30,14 @@ function Movie(props) {
       { genreLinks }
       {children}
     </div>  
+    <div className="card-footer">
+      { addToFavoriteButton }
+    </div>
   </div>;        
 }
 
 Movie.propTypes = {
+  addToFavoriteButton: PropTypes.object,
   genreLinks: PropTypes.object,
   movieId: PropTypes.string,
   title: PropTypes.string,

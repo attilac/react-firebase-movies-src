@@ -52,7 +52,7 @@ function SiteHeader(props) {
       classes={ !user ? 'flex-row' : ''}
       user={ user }
     >
-      { user &&
+      { // user &&
         <ul className="navbar-nav">
           <li className="navbar-item my-3 my-md-0">
             <DropdownSelect 
@@ -71,7 +71,7 @@ function SiteHeader(props) {
           </li>
         </ul>  
       }
-      { user &&
+      { // user &&
         <InputField 
           onSubmit={ searchOnSubmit } 
           onChange={ searchOnChange } 

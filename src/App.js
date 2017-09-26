@@ -8,7 +8,7 @@ import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieDetailPage from './components/MovieDetailPage/MovieDetailPage.js'
 import MoviePage from './components/MoviePage/MoviePage.js'
 import PropsRoute from './components/PropsRoute/PropsRoute.js'
-import PrivateRoute from './components/PrivateRoute/PrivateRoute.js'
+//import PropsRoute from './components/PropsRoute/PropsRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
 import Spinner from './components/Spinner/Spinner'
 
@@ -42,8 +42,6 @@ class App extends Component {
           })
           console.log(user)
 
-          this.getGenresFromFirebase()
-
         } else {
           this.setState({ 
             user: user,
@@ -54,6 +52,7 @@ class App extends Component {
   } 
 
   componentWillMount() { 
+    this.getGenresFromFirebase()
   }
 
   componentWillReceiveProps(nextProps) { 
@@ -144,6 +143,11 @@ class App extends Component {
   searchOnChange = (event) => {
     this.setState({ searchTerm: event.target.value })
   }  
+
+  addMovieToFavorites = (movieId, userId) => {
+    console.log('Movie id ' + movieId)
+    console.log('User id ' + userId)
+  }
 
   genreOnClick = (event) => {
     console.log(event.target.innerHTML )
@@ -254,7 +258,7 @@ class App extends Component {
                         )
                       )}/>   
                       
-                      <PrivateRoute
+                      <PropsRoute
                         exact
                         path="/"
                         component={ MoviePage }
@@ -265,9 +269,10 @@ class App extends Component {
                         getGenreLinkList={ this.getGenreLinkList }
                         getActorList={ this.getActorList }
                         genreOnClick={ this.genreOnClick }
+                        addMovieToFavorites={ this.addMovieToFavorites }
                       /> 
 
-                      <PrivateRoute
+                      <PropsRoute
                         exact
                         path="/genre/:genreName"
                         component={ MoviePage }
@@ -277,10 +282,11 @@ class App extends Component {
                         getGenreNameFromKey={ this.getGenreNameFromKey }    
                         getGenreLinkList={ this.getGenreLinkList }
                         getActorList={ this.getActorList }  
-                        genreOnClick={ this.genreOnClick }               
+                        genreOnClick={ this.genreOnClick } 
+                        addMovieToFavorites={ this.addMovieToFavorites }             
                       /> 
 
-                      <PrivateRoute
+                      <PropsRoute
                         exact
                         path="/movie/:movieId"
                         component={ MovieDetailPage }
@@ -289,7 +295,8 @@ class App extends Component {
                         getGenreNameFromKey={ this.getGenreNameFromKey }  
                         getGenreLinkList={ this.getGenreLinkList }
                         getActorList={ this.getActorList }   
-                        genreOnClick={ this.genreOnClick }                 
+                        genreOnClick={ this.genreOnClick }  
+                        addMovieToFavorites={ this.addMovieToFavorites }               
                       />                                                                                      
                     </Switch>   
                 }

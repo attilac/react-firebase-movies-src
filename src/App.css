@@ -5910,19 +5910,28 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   opacity: 0.01;
   transition: opacity .3s ease-out; }
 
+.movie-fade-appear {
+  opacity: 0;
+  transition: opacity .3s ease-out; }
+
+.movie-fade-appear-active {
+  opacity: 1; }
+
 .MovieList .row span {
   width: 100%;
   display: flex;
   flex-wrap: wrap; }
 
 .card-img-top {
-  transition: all .35s ease-out; }
+  transition: all 1s ease-out; }
 
 .MovieList .card {
   transition: all .35s ease-out;
-  transform-origin: center; }
+  transform-origin: center center center; }
   .MovieList .card:hover {
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); }
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.3); }
+    .MovieList .card:hover .card-img-top {
+      transform: scale(1.03); }
 
 .movie-detail-enter {
   opacity: 0.01; }
@@ -5938,6 +5947,13 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
   opacity: 0.01;
   transition: opacity .3s ease-out; }
 
+.movie-detail-appear {
+  opacity: 0;
+  transition: opacity .3s ease-out; }
+
+.movie-detail-appear-active {
+  opacity: 1; }
+
 .MovieDetail span {
   width: 100%;
   display: block; }
@@ -5945,10 +5961,25 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
 .btn-flat-shadow {
   border-bottom-width: 4px; }
 
+.btn-info.btn-flat-shadow {
+  border-bottom-color: #6d8082; }
+  .btn-info.btn-flat-shadow:hover {
+    border-bottom-color: #566566; }
+
 .btn-danger.btn-flat-shadow {
   border-bottom-color: #bf2718; }
   .btn-danger.btn-flat-shadow:hover {
     border-bottom-color: #921e12; }
+
+.btn-success.btn-flat-shadow {
+  border-bottom-color: #0d5d4d; }
+  .btn-success.btn-flat-shadow:hover {
+    border-bottom-color: #073028; }
+
+.btn-secondary.btn-flat-shadow {
+  border-bottom-color: #040404; }
+  .btn-secondary.btn-flat-shadow:hover {
+    border-bottom-color: black; }
 
 .bg-smoke {
   background-color: #e8e8e8; }

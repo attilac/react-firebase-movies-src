@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import firebase from '../../firebase.js'
+import { CSSTransitionGroup } from 'react-transition-group'
 
 import MovieDetail from '../MovieDetail/MovieDetail'
 import Spinner from '../Spinner/Spinner'
@@ -64,18 +65,29 @@ class MovieDetailPage extends Component {
 
   render() {
     const { movie } = this.state,
-      { genres, match, getGenreLinkList, getActorList, genreOnClick } = this.props
+      { genres, match, getGenreLinkList, getActorList, genreOnClick, addMovieToFavorites, user } = this.props
 
     return ( 
       movie ?  
         <div className="row">
-          <div className="col-md-10 push-md-1 MovieDetail">                 
-            <MovieDetail
-              movie={ movie }
-              getGenreLinkList={ getGenreLinkList }
-              genreOnClick={ genreOnClick }
-              getActorList={ getActorList }
-            />
+          <div className="col-md-10 push-md-1 MovieDetail">   
+            <CSSTransitionGroup
+              transitionName="movie-detail"
+              transitionEnterTimeout={300}
+              transitionLeaveTimeout={300}
+              transitionAppear={true}
+              transitionAppearTimeout={300}
+            >     
+              <MovieDetail
+                key={ movie.key }
+                movie={ movie }
+                getGenreLinkList={ getGenreLinkList }
+                genreOnClick={ genreOnClick }
+                getActorList={ getActorList }
+                addMovieToFavorites={ addMovieToFavorites }
+                user={ user }
+              />
+            </CSSTransitionGroup>             
           </div>
         </div>
         : 
@@ -85,12 +97,14 @@ class MovieDetailPage extends Component {
 }
 
 MovieDetailPage.propTypes = {
+  addMovieToFavorites: PropTypes.func,
   genres: PropTypes.array,
   genreOnClick: PropTypes.func,
   getGenreNameFromKey: PropTypes.func,
   getGenreLinkList: PropTypes.func,
   getActorList: PropTypes.func,    
-  match: PropTypes.object
+  match: PropTypes.object,
+  user: PropTypes.object
 }
 
 export default MovieDetailPage  

@@ -16,6 +16,15 @@
   transition: opacity .3s ease-out;
 }
 
+.movie-fade-appear {
+  opacity: 0;
+  transition: opacity .3s ease-out;
+}
+
+.movie-fade-appear-active{
+  opacity: 1;
+}
+
 .MovieList .row span {
   width: 100%;
   display: flex;
@@ -23,19 +32,19 @@
 }
 
 .card-img-top {
-  transition: all .35s ease-out;
+  transition: all 1s ease-out;
 }
 
 .MovieList .card {
   transition: all .35s ease-out;
-  transform-origin: center;
+  transform-origin: center center center;
 
   &:hover {
     .card-img-top {
-      //transform: scale(1.05);
+    transform: scale(1.03);
     }  
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,.2);
-    //transform: scale(1.03);
-    //border-color: rgba($brand-primary, 1);
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.3);
+    //transform: scale(1.005);
+    //border-color: rgba($brand-primary, .3);
   }
 }

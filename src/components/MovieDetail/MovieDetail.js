@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import Button from '../Button/Button.js'
 
 function MovieDetail(props) {
-  const { movie, getActorList, getGenreLinkList, genreOnClick } = props
+  const { movie, getActorList, getGenreLinkList, genreOnClick, user, addMovieToFavorites } = props
   return (
     <div className="card">
       <div className="row">
@@ -16,11 +17,21 @@ function MovieDetail(props) {
         <div className="col-sm-7">
           <div className="card-block">
 
-            <header className="movie-header mb-3">
+            <header className="movie-header mb-3">             
               <h1 className="card-title font-weight-300">
+                <Button 
+                  onClick={ () => {
+                    addMovieToFavorites(movie.key, user.uid)
+                  } } 
+                  htmlType="button" 
+                  classes="btn-sm btn-flat-shadow d-inline mr-1" 
+                  icon={ <i className="fa fa-plus"></i> } 
+                  title=""
+                  color="info" 
+                />                
                 { movie.title } 
                 <small className="text-muted font-weight-100"> ({ movie.year })</small>
-              </h1>  
+              </h1>               
               <ul className="list-inline d-inline mr-2">
                 <li className="list-inline-item">
                   { movie.contentRating }
@@ -47,10 +58,13 @@ function MovieDetail(props) {
 }
 
 MovieDetail.propTypes = {
+  addMovieToFavorites: PropTypes.func,
+  genreOnClick: PropTypes.func,
   getGenreNameFromKey: PropTypes.func,
   getGenreLinkList: PropTypes.func,
   getActorList: PropTypes.func,
-  movie: PropTypes.object  
+  movie: PropTypes.object,
+  user: PropTypes.object 
 }
 
 export default MovieDetail;
