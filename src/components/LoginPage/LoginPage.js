@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 function LoginPage(props) {
     
   return <div className="row">
-    <div className="col-sm-8 push-sm-2">
+    <div className="col-sm-8 col-md-6 push-sm-2 push-md-3">
       <div className="card mb-3">
         <div className="card-block">   
           <h2 className="card-title">Log in</h2>

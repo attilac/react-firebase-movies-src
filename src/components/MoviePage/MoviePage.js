@@ -48,7 +48,7 @@ class MoviePage extends Component {
   componentWillUnmount() {
     firebase.database()
       .ref('movies')
-      .off()    
+      .off()   
     console.log('componentWillUnmount')      
   } 
 
@@ -58,7 +58,7 @@ class MoviePage extends Component {
       .ref('movies')
       .orderByChild(`genres/${genreId}`)
       .equalTo(true)
-      .limitToLast(50)
+      .limitToLast(12)
       .on('child_added', (snapshot) => {
         //let movies = [...this.state.movies]
         const movie = snapshot.val()
@@ -67,7 +67,20 @@ class MoviePage extends Component {
         //console.log(movies)
         //console.log('Added movie!')
         this.setState({ movies: movies })  
+      }) 
+      /*
+      .on('value', (snapshot) => {
+        //console.log(snapshot.val())      
+        let movies = []
+        for (var prop in snapshot.val()) {
+          let movie = snapshot.val()[prop]
+          movie['key'] = prop
+          movies.push(movie)
+        } 
+        this.setState({ movies: movies })
+        console.log('Fetched Movies!')
       })  
+      */        
   }         
 
   getMoviesFromFirebase = () => {
@@ -75,7 +88,7 @@ class MoviePage extends Component {
     firebase.database()
       .ref('movies')
       //.orderByChild('year')
-      .limitToLast(50)      
+      .limitToLast(12)      
       .on('child_added', (snapshot) => {
         //console.log(snapshot.key)
         //let movies = [...this.state.movies]
@@ -120,7 +133,8 @@ class MoviePage extends Component {
  
   render() {
     const { movies } = this.state,
-      { searchTerm, genres } = this.props
+      { searchTerm, genres, genreOnClick, getGenreNameFromKey, getGenreLinkList, getActorList } = this.props
+    utils.sortObjectsByKey(movies, 'releaseDate', 'DESC' )
 
     return ( 
       movies.length ?   
@@ -130,8 +144,12 @@ class MoviePage extends Component {
               this.getMoviesBySearchTerm(movies) 
               : movies
           } 
-          colWidth="col-6 col-sm-4 col-md-3 col-lg-2 mb-4"
-          genres={genres}
+          colWidth="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 mb-4"
+          genres={ genres }
+          genreOnClick={ genreOnClick }
+          getGenreNameFromKey={ getGenreNameFromKey }
+          getGenreLinkList={ getGenreLinkList }
+          getActorList={ getActorList }          
         />   
         : 
         <Spinner />      
@@ -142,6 +160,10 @@ class MoviePage extends Component {
 MoviePage.propTypes = {
   genres: PropTypes.array,
   genre: PropTypes.string,
+  genreOnClick: PropTypes.func,
+  getGenreNameFromKey: PropTypes.func,
+  getGenreLinkList: PropTypes.func,
+  getActorList: PropTypes.func,  
   match: PropTypes.object,
   searchTerm: PropTypes.string
 }

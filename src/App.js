@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch, Link } from 'react-router-dom'
 import firebase from './firebase.js'
-//import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 
-//import Navbar from './components/Navbar/Navbar.js'
 import SiteHeader from './components/SiteHeader/SiteHeader.js'
-//import InputField from './components/InputField/InputField.js'
-//import UserDropdown from './components/UserDropdown/UserDropdown.js'
 import LoginForm from './components/LoginForm/LoginForm.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
-//import MovieList from './components/MovieList/MovieList.js'
+import MovieDetailPage from './components/MovieDetailPage/MovieDetailPage.js'
 import MoviePage from './components/MoviePage/MoviePage.js'
-//import Movies from './movies.js'
-//import DropdownSelect from './components/DropdownSelect/DropdownSelect.js'
-//import GenreDropdownMenu from './components/GenreDropdownMenu/GenreDropdownMenu.js'
 import PropsRoute from './components/PropsRoute/PropsRoute.js'
 import PrivateRoute from './components/PrivateRoute/PrivateRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
@@ -27,8 +20,8 @@ class App extends Component {
 
   state = {
     errorMessage: '',
+    genre: '',
     genres: [],
-    genreObjectList: [],
     password: '',
     user: undefined,
     username: ''
@@ -60,45 +53,17 @@ class App extends Component {
       })
   } 
 
+  componentWillMount() { 
+  }
+
+  componentWillReceiveProps(nextProps) { 
+  }
+
   componentWillUnmount() {
     firebase
       .auth()
       .unsubscribeAuthStateChanged()
   } 
-
-  getGenresFromFirebase = () => {
-    firebase.database()
-      .ref('genres')   
-      /*
-      .on('child_added', (snapshot) => {
-        let genres = [...this.state.genres]
-        let genre = {
-          key: snapshot.key,
-          title:  snapshot.val().title
-        }
-        genres.push(genre)
-        //console.log('Added genre!')
-        this.setState({ genres: genres }) 
-        //console.log(this.state.genres) 
-      })   
-      */    
-      
-      .once('value', (snapshot) => {
-        //console.log(snapshot.val())  
-        
-        let genres = []
-        for (var prop in snapshot.val()) {
-          let genre = {
-            key: prop,
-            title: snapshot.val()[prop].title
-          }
-          genres.push(genre)
-        } 
-        //console.log(genres)  
-        this.setState({ genres: genres })
-        console.log('Fetched genres!')
-      })     
-  }
 
   createUser = () => {
     const { email, password } = this.state
@@ -135,7 +100,40 @@ class App extends Component {
         this.setState({ errorMessage: errorMessage})
         console.log(errorMessage)
       }) 
-  } 
+  }
+
+  getGenresFromFirebase = () => {
+    firebase.database()
+      .ref('genres')   
+      /*
+      .on('child_added', (snapshot) => {
+        let genres = [...this.state.genres]
+        let genre = {
+          key: snapshot.key,
+          title:  snapshot.val().title
+        }
+        genres.push(genre)
+        //console.log('Added genre!')
+        this.setState({ genres: genres }) 
+        //console.log(this.state.genres) 
+      })   
+      */    
+      
+      .once('value', (snapshot) => {
+        //console.log(snapshot.val())      
+        let genres = []
+        for (var prop in snapshot.val()) {
+          let genre = {
+            key: prop,
+            title: snapshot.val()[prop].title
+          }
+          genres.push(genre)
+        } 
+        //console.log(genres)  
+        this.setState({ genres: genres })
+        console.log('Fetched genres!')
+      })     
+  }       
 
   searchOnSubmit = (event) => {
     if (event.key === 'Enter') {
@@ -147,13 +145,70 @@ class App extends Component {
     this.setState({ searchTerm: event.target.value })
   }  
 
-  onGenreClick = (event) => {
-    //console.log(event.target)
-    //this.setState({ genre: event.target.innerHTML })   
+  genreOnClick = (event) => {
+    console.log(event.target.innerHTML )
+    this.setState({ genre: event.target.innerHTML })   
+  } 
+
+  getGenreNameFromKey = (key) => { 
+    //console.log(this.state.genres)
+    return this.state.genres
+      /*  
+      .map((item, index) => { 
+        if(item.key === key ){     
+          return item.title
+        }   
+      }).filter(x => x !== undefined).join('') 
+      */
+     
+      .filter((genre) => {
+        return genre.key === key
+      })
+      .map((item, index) => {  
+        return item.title
+      }).join('')
+  }
+
+  getGenreLinkList = (mGenres, genreOnClick, classes) => {
+    //console.log(classes)     
+    const genreLinks = Object.keys(mGenres)
+      .map((key, index) => {
+        return (
+          <li key={ index } className="list-inline-item movie-genre-item">
+            <Link 
+              className="genre-link" 
+              to={ `/genre/${key}`} 
+              onClick={ genreOnClick }
+            >
+              { this.getGenreNameFromKey(key)}
+            </Link>
+          </li>
+        )
+      })
+    return <ul className={ `list-inline movie-genre-list ${classes}`}>
+      { genreLinks }
+    </ul>
+  }
+
+  getActorList = (actors) => {
+    const listItems = actors
+      .map((actor, index) => {
+        return (
+          <li key={ index } className="list-inline-item">
+            { actor }
+          </li>
+        )
+      }) 
+
+    return (
+      <ul className="list-inline font-size-sm">
+        { listItems }
+      </ul> 
+    )
   }    
 
   render() {
-    const { searchTerm, genres } = this.state,
+    const { searchTerm, genres, genre } = this.state,
       { username, user, errorMessage } = this.state
     return (
       <Router> 
@@ -173,7 +228,8 @@ class App extends Component {
                   searchOnSubmit={ this.searchOnSubmit }
                   searchOnChange={ this.searchOnChange }
                   logOutUser={ this.logOutUser }
-                  onGenreClick={ this.onGenreClick }
+                  genreOnClick={ this.genreOnClick }
+                  genre={ genre }
                 />                                                 
             } 
 
@@ -205,6 +261,10 @@ class App extends Component {
                         user={ user }
                         genres={ genres }
                         searchTerm={ searchTerm }
+                        getGenreNameFromKey={ this.getGenreNameFromKey }
+                        getGenreLinkList={ this.getGenreLinkList }
+                        getActorList={ this.getActorList }
+                        genreOnClick={ this.genreOnClick }
                       /> 
 
                       <PrivateRoute
@@ -214,7 +274,23 @@ class App extends Component {
                         user={ user }
                         genres={ genres }
                         searchTerm={ searchTerm }
-                      />                                                              
+                        getGenreNameFromKey={ this.getGenreNameFromKey }    
+                        getGenreLinkList={ this.getGenreLinkList }
+                        getActorList={ this.getActorList }  
+                        genreOnClick={ this.genreOnClick }               
+                      /> 
+
+                      <PrivateRoute
+                        exact
+                        path="/movie/:movieId"
+                        component={ MovieDetailPage }
+                        user={ user }
+                        genres={ genres }
+                        getGenreNameFromKey={ this.getGenreNameFromKey }  
+                        getGenreLinkList={ this.getGenreLinkList }
+                        getActorList={ this.getActorList }   
+                        genreOnClick={ this.genreOnClick }                 
+                      />                                                                                      
                     </Switch>   
                 }
               </div>  

@@ -5,6 +5,9 @@
 @import './components/Spinner/Spinner.scss';
 @import './components/UserDropdown/UserDropdown.scss';
 @import './components/GenreDropdownMenu/GenreDropdownMenu.scss';
+@import './components/MovieList/MovieList.scss';
+@import './components/MovieDetailPage/MovieDetailPage.scss';
+@import './components/Button/Button.scss';
 
 .bg-smoke {
   background-color: #e8e8e8;
@@ -14,26 +17,24 @@
   font-weight: 100;
 }
 
-.fade-enter {
-  opacity: 0.01;
+.font-weight-300 {
+  font-weight: 100;
 }
 
-.fade-enter.fade-enter-active {
-  opacity: 1;
-  transition: opacity .3s ease;
+.font-size-md {
+  font-size: 1.125rem;
 }
 
-.fade-leave {
-  opacity: 1;
+.font-size-base {
+  font-size: 1rem;
 }
 
-.fade-leave.fade-leave-active {
-  opacity: 0.01;
-  transition: opacity .3s ease;
+.font-size-sm {
+  font-size: .875rem;
 }
 
-.MovieList .row span {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+.text-center-xs {
+  @media(max-width: 768px){
+    text-align: center;
+  }
 }

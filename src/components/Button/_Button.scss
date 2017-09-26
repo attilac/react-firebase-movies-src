@@ -1,0 +1,10 @@
+.btn-flat-shadow {
+  border-bottom-width: 4px;
+}
+
+.btn-danger.btn-flat-shadow {
+  border-bottom-color: darken($brand-danger, 15%);
+  &:hover {
+    border-bottom-color: darken($brand-danger, 25%);
+  }
+}

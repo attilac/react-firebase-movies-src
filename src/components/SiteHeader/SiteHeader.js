@@ -12,6 +12,7 @@ function SiteHeader(props) {
   const { 
       navbarTitle,
       user, 
+      genre,
       genres, 
       logOutUser, 
       username,
@@ -19,7 +20,7 @@ function SiteHeader(props) {
       searchOnSubmit,
       searchOnChange,
       location,
-      onGenreClick
+      genreOnClick
     } = props,
     userDropdown = () => {
       return (
@@ -39,7 +40,10 @@ function SiteHeader(props) {
         .map((item, index) => {  
           return item.title
         }).join('')       
-    }
+    },
+    isGenrePath = () => {
+      return location.pathname.substring(1, location.pathname.lastIndexOf('/') )  === 'genre'   
+    }    
 
   return (
     <Navbar 
@@ -52,7 +56,7 @@ function SiteHeader(props) {
         <ul className="navbar-nav">
           <li className="navbar-item my-3 my-md-0">
             <DropdownSelect 
-              title={ location.pathname !== '/' ? 
+              title={ isGenrePath() ? 
                 genreNameFromLocation() 
                 : 'Genres'
               } 
@@ -61,7 +65,7 @@ function SiteHeader(props) {
             >
               <GenreDropdownMenu
                 items={ genres }
-                onClick={ onGenreClick }
+                onClick={ genreOnClick }
               />  
             </DropdownSelect> 
           </li>
@@ -84,6 +88,7 @@ function SiteHeader(props) {
 SiteHeader.propTypes = {
   navbarTitle: PropTypes.string,
   user: PropTypes.object, 
+  genre: PropTypes.string,
   genres: PropTypes.array, 
   logOutUser: PropTypes.func, 
   username: PropTypes.string,
@@ -91,7 +96,7 @@ SiteHeader.propTypes = {
   searchOnSubmit: PropTypes.func,
   searchOnChange: PropTypes.func,
   location: PropTypes.object,
-  onGenreClick: PropTypes.func
+  genreOnClick: PropTypes.func
 }
 
 SiteHeader.defaultProps = {

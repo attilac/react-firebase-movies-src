@@ -7,54 +7,33 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import Movie from '../Movie/Movie.js';
 
 function MovieList(props) {
-  const { movies, colWidth, genreOnClick, genres } = props,
-    getGenreNameFromKey = function(key) { 
-      //console.log(key)
-      return genres
-        /*  
-        .map((item, index) => { 
-          if(item.key === key ){     
-            return item.title
-          }   
-        }).filter(x => x !== undefined).join('') 
-        */
-       
-        .filter((genre) => {
-          return genre.key === key
-        })
-        .map((item, index) => {  
-          return item.title
-        })
-    },
-    getGenreLinkList = function(mGenres) {
-      //console.log(mGenres)     
-      const genreLinks = Object.keys(mGenres)
-        .map((key, index) =>
-          <li key={ index } className="list-inline-item movie-genre-item">
-            <Link className="genre-link" to={ `/genre/${key}`} onClick={ genreOnClick }>
-              { getGenreNameFromKey(key)}
-            </Link>
-          </li>
-        )
-      return <ul className="list-inline movie-genre-list">
-        { genreLinks }
-      </ul>
-    },   
-
+  const { movies, colWidth, genreOnClick, genres, getGenreNameFromKey, getGenreLinkList, getActorList } = props,
     list = movies
       .map((item, index) =>
-        <div key={ index } className={ colWidth }>
-          <Movie title={ item.title } poster={ `/img/${item.poster}` } year={ item.year }>
-            { getGenreLinkList(item.genres) }
+        <div key={ item.key } className={ colWidth }>
+          <Movie 
+            title={ item.title } 
+            poster={ `/img/${item.poster}` } 
+            year={ item.year }
+            movieId={ item.key }
+            genreLinks={ getGenreLinkList(item.genres, genreOnClick) }
+          >    
+            { /* item.actors !== undefined && 
+              <div>
+                <h6 className="font-size-sm">Stars</h6>
+                { getActorList(item.actors) }
+              </div>  
+              */
+            }
           </Movie>
         </div>  
-      );
+      )
 
   return (
     <section className="MovieList">
       <div className="row">  
         <CSSTransitionGroup
-          transitionName="fade"
+          transitionName="movie-fade"
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >         
@@ -67,6 +46,9 @@ function MovieList(props) {
 
 MovieList.propTypes = {
   genres: PropTypes.arrayOf(PropTypes.object).isRequired, 
+  getGenreNameFromKey: PropTypes.func,
+  getGenreLinkList: PropTypes.func,
+  getActorList: PropTypes.func,
   movies: PropTypes.arrayOf(PropTypes.object).isRequired,
   colWidth: PropTypes.string,
   genreOnClick: PropTypes.func

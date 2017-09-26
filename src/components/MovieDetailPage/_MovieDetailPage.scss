@@ -1,0 +1,22 @@
+.movie-detail-enter {
+  opacity: 0.01;
+}
+
+.movie-detail-enter.movie-detail-enter-active {
+  opacity: 0;
+  transition: opacity .3s ease-out;
+}
+
+.movie-detail-leave {
+  opacity: 0;
+}
+
+.movie-detail-leave.movie-detail-leave-active {
+  opacity: 0.01;
+  transition: opacity .3s ease-out;
+}
+
+.MovieDetail span {
+  width: 100%;
+  display: block;
+}

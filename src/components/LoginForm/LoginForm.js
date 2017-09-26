@@ -122,9 +122,9 @@ class LoginForm extends Component {
         <Button 
           onClick={ this.onButtonClick } 
           htmlType="submit" 
-          classes="btn-block mt-5" 
+          classes="btn-block mt-5 btn-flat-shadow" 
           title={ submitBtnLabel } 
-          color="primary" 
+          color="danger" 
         />       
       </form>              
     );

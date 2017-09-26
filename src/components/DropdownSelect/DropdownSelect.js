@@ -12,14 +12,18 @@ class DropdownSelect extends Component {
 
   toggle(event) {
     this.setState({ dropdownOpen: !this.state.dropdownOpen })
-  } 
+  }
 
   renderChildren() {
+    //console.log(this.props.children.props)
     return React.Children
       .map(this.props.children, child => {
         return child.type.name === 'GenreDropdownMenu' ?
           React.cloneElement(child, {
-            onClick: this.toggle
+            onClick: (event) => {
+              this.toggle(event)
+              this.props.children.props.onClick(event)
+            }
           }) 
           :
           child

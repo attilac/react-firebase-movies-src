@@ -1,0 +1,41 @@
+.movie-fade-enter {
+  opacity: 0.01;
+}
+
+.movie-fade-enter.movie-fade-enter-active {
+  opacity: 1;
+  transition: opacity .3s ease-out;
+}
+
+.movie-fade-leave {
+  opacity: 1;
+}
+
+.movie-fade-leave.movie-fade-leave-active {
+  opacity: 0.01;
+  transition: opacity .3s ease-out;
+}
+
+.MovieList .row span {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-img-top {
+  transition: all .35s ease-out;
+}
+
+.MovieList .card {
+  transition: all .35s ease-out;
+  transform-origin: center;
+
+  &:hover {
+    .card-img-top {
+      //transform: scale(1.05);
+    }  
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.2);
+    //transform: scale(1.03);
+    //border-color: rgba($brand-primary, 1);
+  }
+}
