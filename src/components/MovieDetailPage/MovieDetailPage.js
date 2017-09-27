@@ -65,7 +65,16 @@ class MovieDetailPage extends Component {
 
   render() {
     const { movie } = this.state,
-      { genres, match, getGenreLinkList, getActorList, genreOnClick, addMovieToFavorites, user } = this.props
+      { 
+        addFavoriteButton,
+        addMovieToFavorites, 
+        genreOnClick, 
+        genres, 
+        getActorList, 
+        getGenreLinkList, 
+        match, 
+        user 
+      } = this.props
 
     return ( 
       movie ?  
@@ -85,6 +94,7 @@ class MovieDetailPage extends Component {
                 genreOnClick={ genreOnClick }
                 getActorList={ getActorList }
                 addMovieToFavorites={ addMovieToFavorites }
+                addFavoriteButton={ addFavoriteButton }
                 user={ user }
               />
             </CSSTransitionGroup>             
@@ -97,6 +107,7 @@ class MovieDetailPage extends Component {
 }
 
 MovieDetailPage.propTypes = {
+  addFavoriteButton: PropTypes.func,
   addMovieToFavorites: PropTypes.func,
   genres: PropTypes.array,
   genreOnClick: PropTypes.func,

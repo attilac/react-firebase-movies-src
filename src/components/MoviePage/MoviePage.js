@@ -10,29 +10,48 @@ import utils from '../../scripts/utils.js'
 class MoviePage extends Component {
 
   state = {
+    genre: undefined,
     movies: [],
     moviesByGenre: []
   }
 
   componentDidMount() {   
-    //this.getMoviesByGenre(this.props.match.params.genreName)
   } 
 
   componentWillMount() { 
     //console.log(this.props.match.params.genreName)
-    this.props.match.params.genreName === undefined ?
-      this.getMoviesFromFirebase()
-      :
-      this.getMoviesByGenre(this.props.match.params.genreName)
+    const { match, user, myList } = this.props
+    if(match.params.genreName === undefined) {
+      user && myList ?
+        this.getFavoriteList()
+        :
+        this.getMoviesFromFirebase()
+      this.setState({ genre: undefined })  
+    } else {
+      this.getMoviesByGenre(match.params.genreName)  
+      const genreName = this.props.getGenreNameFromKey(match.params.genreName)
+      this.setState({ genre: genreName })         
+    }  
   }
 
   componentWillReceiveProps(nextProps) { 
-    //console.log('componentWillReceiveProps')
+    console.log('componentWillReceiveProps')
+    const { match, user, myList, getGenreNameFromKey } = this.props
     if(nextProps.match.params.genreName === undefined){
-      this.getMoviesFromFirebase()
-    } else if (nextProps.match.params.genreName !== this.props.match.params.genreName) { 
+      user && myList ?
+        this.getFavoriteList()
+        :
+        this.getMoviesFromFirebase()
+      this.setState({ genre: undefined })
+    } else if (nextProps.match.params.genreName !== match.params.genreName) { 
       this.setState({ movies: [] })
+      const genreName = getGenreNameFromKey(nextProps.match.params.genreName)
+      this.setState({ genre: genreName })
       this.getMoviesByGenre(nextProps.match.params.genreName)
+    } else {
+      //console.log(this.props.genres)
+      const genreName = getGenreNameFromKey(nextProps.match.params.genreName)
+      this.setState({ genre: genreName })     
     }
   }
 
@@ -50,15 +69,15 @@ class MoviePage extends Component {
       .ref('movies')
       .off()   
     console.log('componentWillUnmount')      
-  } 
+  }   
 
   getMoviesByGenre = (genreId) => {
-    let movies = []
+
     firebase.database()
       .ref('movies')
       .orderByChild(`genres/${genreId}`)
       .equalTo(true)
-      .limitToLast(12)
+      .limitToLast(36)
       /*
       .on('child_added', (snapshot) => {
         //let movies = [...this.state.movies]
@@ -85,23 +104,10 @@ class MoviePage extends Component {
   }         
 
   getMoviesFromFirebase = () => {
-    let movies = []
     firebase.database()
       .ref('movies')
       //.orderByChild('year')
-      .limitToLast(12)  
-      /*    
-      .on('child_added', (snapshot) => {
-        //console.log(snapshot.key)
-        //let movies = [...this.state.movies]
-        const movie = snapshot.val()
-        movie['key'] = snapshot.key   
-        movies.push(movie)
-        //console.log(movies)
-        //console.log('Added movie!')
-        this.setState({ movies: movies })  
-      }) 
-      */
+      .limitToLast(36)  
       .on('value', (snapshot) => {
         //console.log(snapshot.val())      
         let movies = []
@@ -114,6 +120,27 @@ class MoviePage extends Component {
         console.log('Fetched Movies!')
       })        
   }  
+
+  getFavoriteList = () => {
+    //console.log('hej')
+    const { uid } = this.props.user
+    firebase.database()
+      .ref('movies')
+      .orderByChild('users')
+      .startAt(true, uid)
+      .on('value', (snapshot) => {
+        //console.log(snapshot.val())      
+        let movies = []
+        for (var prop in snapshot.val()) {
+          let movie = snapshot.val()[prop]
+          movie['key'] = prop
+          //console.log(movie)
+          movies.push(movie)
+        } 
+        this.setState({ movies: movies })
+        console.log('Fetched Movies!')
+      })     
+  }
 
   getMoviesFromHeroku() {
     fetch('https://fend-api.herokuapp.com/movies')
@@ -146,8 +173,20 @@ class MoviePage extends Component {
   }         
  
   render() {
-    const { movies } = this.state,
-      { searchTerm, genres, genreOnClick, getGenreNameFromKey, getGenreLinkList, getActorList, user, addMovieToFavorites } = this.props
+    const { movies, genre } = this.state,
+      { 
+        addFavoriteButton,
+        addMovieToFavorites,
+        genreOnClick, 
+        genres, 
+        getActorList, 
+        getGenreLinkList, 
+        getGenreNameFromKey, 
+        heading,
+        searchTerm, 
+        user 
+      } = this.props
+
     utils.sortObjectsByKey(movies, 'releaseDate', 'DESC' )
 
     return ( 
@@ -164,8 +203,10 @@ class MoviePage extends Component {
           getGenreNameFromKey={ getGenreNameFromKey }
           getGenreLinkList={ getGenreLinkList }
           getActorList={ getActorList }
+          heading={ genre ? genre : heading }
           user={ user }  
-          addMovieToFavorites={ addMovieToFavorites }        
+          addMovieToFavorites={ addMovieToFavorites }   
+          addFavoriteButton={ addFavoriteButton }     
         />   
         : 
         <Spinner />      
@@ -174,14 +215,16 @@ class MoviePage extends Component {
 }
 
 MoviePage.propTypes = {
+  addFavoriteButton: PropTypes.func,
   addMovieToFavorites: PropTypes.func,
   genres: PropTypes.array,
-  genre: PropTypes.string,
   genreOnClick: PropTypes.func,
   getGenreNameFromKey: PropTypes.func,
   getGenreLinkList: PropTypes.func,
-  getActorList: PropTypes.func,  
+  getActorList: PropTypes.func, 
+  heading: PropTypes.string, 
   match: PropTypes.object,
+  myList: PropTypes.bool,
   searchTerm: PropTypes.string,
   user: PropTypes.object
 }

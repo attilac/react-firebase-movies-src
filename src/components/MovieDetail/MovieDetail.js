@@ -5,7 +5,16 @@ import { Link } from 'react-router-dom'
 import Button from '../Button/Button.js'
 
 function MovieDetail(props) {
-  const { movie, getActorList, getGenreLinkList, genreOnClick, user, addMovieToFavorites } = props
+  const {
+    addFavoriteButton, 
+    addMovieToFavorites,
+    genreOnClick, 
+    getActorList, 
+    getGenreLinkList, 
+    movie, 
+    user 
+  } = props
+
   return (
     <div className="card">
       <div className="row">
@@ -19,17 +28,8 @@ function MovieDetail(props) {
 
             <header className="movie-header mb-3">             
               <h1 className="card-title font-weight-300">
-                <Button 
-                  onClick={ () => {
-                    addMovieToFavorites(movie.key, user.uid)
-                  } } 
-                  htmlType="button" 
-                  classes="btn-sm btn-flat-shadow d-inline mr-1" 
-                  icon={ <i className="fa fa-plus"></i> } 
-                  title=""
-                  color="info" 
-                />                
-                { movie.title } 
+                <span className="pr-1 d-inline">{ addFavoriteButton(movie) }</span>              
+                { movie.title }
                 <small className="text-muted font-weight-100"> ({ movie.year })</small>
               </h1>               
               <ul className="list-inline d-inline mr-2">
@@ -58,6 +58,7 @@ function MovieDetail(props) {
 }
 
 MovieDetail.propTypes = {
+  addFavoriteButton: PropTypes.func,
   addMovieToFavorites: PropTypes.func,
   genreOnClick: PropTypes.func,
   getGenreNameFromKey: PropTypes.func,

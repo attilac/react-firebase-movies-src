@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Redirect, Switch, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Link } from 'react-router-dom'
 import firebase from './firebase.js'
 
-import SiteHeader from './components/SiteHeader/SiteHeader.js'
-import LoginForm from './components/LoginForm/LoginForm.js'
+import Button from './components/Button/Button.js'
 import LoginPage from './components/LoginPage/LoginPage.js'
 import MovieDetailPage from './components/MovieDetailPage/MovieDetailPage.js'
 import MoviePage from './components/MoviePage/MoviePage.js'
+import PrivateRoute from './components/PrivateRoute/PrivateRoute.js'
 import PropsRoute from './components/PropsRoute/PropsRoute.js'
-//import PropsRoute from './components/PropsRoute/PropsRoute.js'
+import PublicRoute from './components/PublicRoute/PublicRoute.js'
 import ScrollToTop from './components/ScrollToTop.js'
+import SiteHeader from './components/SiteHeader/SiteHeader.js'
 import Spinner from './components/Spinner/Spinner'
 
 //import utils from './scripts/utils.js'
@@ -20,6 +21,7 @@ class App extends Component {
 
   state = {
     errorMessage: '',
+    favList: [],
     genre: '',
     genres: [],
     password: '',
@@ -53,6 +55,7 @@ class App extends Component {
 
   componentWillMount() { 
     this.getGenresFromFirebase()
+    this.childAdded()
   }
 
   componentWillReceiveProps(nextProps) { 
@@ -63,6 +66,34 @@ class App extends Component {
       .auth()
       .unsubscribeAuthStateChanged()
   } 
+
+  childAdded = () => {
+    firebase.database()
+      .ref('users_movies') 
+      .on('child_added', (snapshot) => {
+        let favList = [...this.state.favList]
+        const favListItem = snapshot.val()
+        favList['key'] = snapshot.key   
+        favList.push(favListItem)
+        //console.log(favList)
+        console.log('Added movie to favlist!')
+        this.setState({ favList: favList })   
+      })
+  }  
+
+  childRemoved = () => {
+    firebase.database()
+      .ref('users_movies')
+      .on('child_removed', (snapshot) => {
+        //console.log(snapshot.key)
+        let favList = [...this.state.favList]
+          .filter( (item) => {
+            return item.key !== snapshot.key    
+          })
+        console.log('Removed favlist item')
+        this.setState({ favList: favList })
+      }) 
+  }  
 
   createUser = () => {
     const { email, password } = this.state
@@ -132,7 +163,7 @@ class App extends Component {
         this.setState({ genres: genres })
         console.log('Fetched genres!')
       })     
-  }       
+  }            
 
   searchOnSubmit = (event) => {
     if (event.key === 'Enter') {
@@ -145,12 +176,88 @@ class App extends Component {
   }  
 
   addMovieToFavorites = (movieId, userId) => {
-    console.log('Movie id ' + movieId)
-    console.log('User id ' + userId)
-  }
+    //console.log('Movie id ' + movieId)
+    //console.log('User id ' + userId)
+
+    firebase.database()
+      .ref(`users_movies/user/${userId}`)
+      .update(({ [movieId] : true })) 
+      .then( () => {
+        console.log('Pushed a new favlist item') 
+      }) 
+      .catch(error => { 
+        console.log('There was an error', error) 
+      })   
+
+    firebase.database()
+      .ref(`movies/${movieId}/users`)
+      .update(({[userId] : true}))      
+      .then( () => {
+        console.log('Updated movie!') 
+      }) 
+      .catch(error => { 
+        console.log('There was an error', error) 
+      })                        
+  } 
+
+  removeMovieFromFavorites = (movieId, userId) => {
+    firebase.database()
+      .ref(`users_movies/user/${userId}/${movieId}`)
+      .remove()
+      .catch(error => { 
+        console.log('There was an error', error) 
+      }) 
+
+    firebase.database()
+      .ref(`movies/${movieId}/users/${userId}`) 
+      .remove()          
+      .catch(error => { 
+        console.log('There was an error', error) 
+      })       
+  }  
+
+  addFavoriteButton = (movie) => {
+    const { user } = this.state,
+      favoriteButton =  movie.users ?
+        <Button 
+          onClick={ () => {
+            this.removeMovieFromFavorites(movie.key, user.uid)
+          } } 
+          htmlType="button" 
+          classes="btn-sm btn-flat-shadow" 
+          icon={ <i className="fa fa-minus"></i> } 
+          title=""
+          color="info" 
+          titleText="Remove from my list"
+        />
+        :    
+        <Button 
+          onClick={ () => {
+            this.addMovieToFavorites(movie.key, user.uid)
+          } } 
+          htmlType="button" 
+          classes="btn-sm btn-flat-shadow" 
+          icon={ <i className="fa fa-plus"></i> } 
+          title=""
+          color="info" 
+          titleText="Add to my list"
+        />,  
+      output = user ?
+        favoriteButton
+        :
+        <Link 
+          to="/login"
+          className="btn btn-info btn-sm btn-flat-shadow"
+          title="Login to add to my list"
+        >
+          <i className="fa fa-plus"></i>
+        </Link>       
+
+    return output
+  }  
 
   genreOnClick = (event) => {
-    console.log(event.target.innerHTML )
+    //console.log(event.target.innerHTML )
     this.setState({ genre: event.target.innerHTML })   
   } 
 
@@ -244,20 +351,33 @@ class App extends Component {
                     <Spinner />
                     :           
                     <Switch>
-                      <Route path='/login' render={({ match }) => (
-                        user ? (
-                          <Redirect to="/"/>
-                        ) : (
-                          <LoginPage >
-                            <LoginForm 
-                              submitBtnLabel="Log in" 
-                              errorMessage={ errorMessage }
-                              onFormSubmit={ this.onFormSubmit } 
-                            />
-                          </LoginPage> 
-                        )
-                      )}/>   
-                      
+
+                      <PublicRoute
+                        path='/login'
+                        component={ LoginPage }
+                        user={ user }
+                        submitBtnLabel="Log in" 
+                        errorMessage={ errorMessage }
+                        onFormSubmit={ this.onFormSubmit }  
+                      />                         
+
+                      <PrivateRoute
+                        exact
+                        path="/my-list"
+                        component={ MoviePage }
+                        user={ user }
+                        genres={ genres }
+                        searchTerm={ searchTerm }
+                        getGenreNameFromKey={ this.getGenreNameFromKey }
+                        getGenreLinkList={ this.getGenreLinkList }
+                        getActorList={ this.getActorList }
+                        genreOnClick={ this.genreOnClick }
+                        addMovieToFavorites={ this.addMovieToFavorites }
+                        addFavoriteButton={ this.addFavoriteButton }
+                        myList
+                        heading="My List"
+                      /> 
+
                       <PropsRoute
                         exact
                         path="/"
@@ -270,6 +390,8 @@ class App extends Component {
                         getActorList={ this.getActorList }
                         genreOnClick={ this.genreOnClick }
                         addMovieToFavorites={ this.addMovieToFavorites }
+                        addFavoriteButton={ this.addFavoriteButton }
+                        heading="Movies"
                       /> 
 
                       <PropsRoute
@@ -283,7 +405,8 @@ class App extends Component {
                         getGenreLinkList={ this.getGenreLinkList }
                         getActorList={ this.getActorList }  
                         genreOnClick={ this.genreOnClick } 
-                        addMovieToFavorites={ this.addMovieToFavorites }             
+                        addMovieToFavorites={ this.addMovieToFavorites }     
+                        addFavoriteButton={ this.addFavoriteButton }    
                       /> 
 
                       <PropsRoute
@@ -296,7 +419,8 @@ class App extends Component {
                         getGenreLinkList={ this.getGenreLinkList }
                         getActorList={ this.getActorList }   
                         genreOnClick={ this.genreOnClick }  
-                        addMovieToFavorites={ this.addMovieToFavorites }               
+                        addMovieToFavorites={ this.addMovieToFavorites }   
+                        addFavoriteButton={ this.addFavoriteButton }            
                       />                                                                                      
                     </Switch>   
                 }

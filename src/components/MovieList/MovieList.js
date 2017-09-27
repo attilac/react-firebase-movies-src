@@ -1,14 +1,20 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { CSSTransitionGroup } from 'react-transition-group'
-import Button from '../Button/Button.js'
 
 import Movie from '../Movie/Movie.js';
 
 function MovieList(props) {
-  const { movies, colWidth, genreOnClick, genres, getGenreNameFromKey, getGenreLinkList, getActorList, user, addMovieToFavorites } = props,
+  const { 
+      addFavoriteButton,
+      colWidth, 
+      genreOnClick, 
+      getActorList, 
+      getGenreLinkList, 
+      heading,
+      movies
+    } = props,
     list = movies
       .map((item, index) =>
         <div key={ `movie-${item.key}` } className={ colWidth }>
@@ -18,18 +24,7 @@ function MovieList(props) {
             year={ item.year }
             movieId={ item.key }
             genreLinks={ getGenreLinkList(item.genres, genreOnClick, '') }
-            addToFavoriteButton={
-              <Button 
-                onClick={ () => {
-                  addMovieToFavorites(item.key, user.uid)
-                } } 
-                htmlType="button" 
-                classes="btn-sm btn-flat-shadow" 
-                icon={ <i className="fa fa-plus"></i> } 
-                title=""
-                color="info" 
-              />              
-            }
+            addToFavoriteButton={ addFavoriteButton(item) }
           >    
           </Movie>  
           { /* item.actors !== undefined && 
@@ -44,6 +39,9 @@ function MovieList(props) {
 
   return (
     <section className="MovieList">
+      <h1 className="page-title mb-3 font-weight-100 text-uppercase">
+        { heading }
+      </h1>
       <div className="row">  
         <CSSTransitionGroup
           transitionName="movie-fade"
@@ -60,11 +58,13 @@ function MovieList(props) {
 }
 
 MovieList.propTypes = {
+  addFavoriteButton: PropTypes.func,
   addMovieToFavorites: PropTypes.func,
   genres: PropTypes.arrayOf(PropTypes.object).isRequired, 
   getGenreNameFromKey: PropTypes.func,
   getGenreLinkList: PropTypes.func,
   getActorList: PropTypes.func,
+  heading: PropTypes.string, 
   movies: PropTypes.arrayOf(PropTypes.object).isRequired,
   colWidth: PropTypes.string,
   genreOnClick: PropTypes.func,

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import DropdownSelect from '../DropdownSelect/DropdownSelect.js'
 import { DropdownMenu, DropdownItem } from 'reactstrap'
 import PropTypes from 'prop-types'
+import UserDropdownMenu from '../UserDropdownMenu/UserDropdownMenu.js'
 
 function UserDropdown(props) {
   const { user, username, logOutUser, classes } = props
@@ -13,19 +14,10 @@ function UserDropdown(props) {
         icon={ <i className="fa fa-user-o font-size-xl"></i> }
         classes={ classes }
       >
-        <DropdownMenu 
-          className="dropdown-menu-right"
-        >
-          <DropdownItem 
-            header={ true }
-          >
-            Signed in as { username }
-          </DropdownItem>
-          
-          <a className="dropdown-item" onClick={ logOutUser } href="/">
-            Log out
-          </a>
-        </DropdownMenu>  
+        <UserDropdownMenu
+          username={ username }
+          logOutUser={ logOutUser }
+        />
       </DropdownSelect>  
       :
       <Link 

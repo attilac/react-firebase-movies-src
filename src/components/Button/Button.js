@@ -3,12 +3,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'  
 
 function Button(props) {
-  const { active, color, classes, htmlType, title, onClick, icon } = props,
+  const { 
+      active, 
+      classes, 
+      color, 
+      htmlType, 
+      icon, 
+      onClick, 
+      title, 
+      titleText 
+    } = props,
     isActive = active ? 'active' : '',
     variant = color ? `btn-${color}` : ''
 
   return(
-    <button onClick={ onClick } type={ htmlType } className={ `btn ${variant} ${isActive} ${ classes }` }>
+    <button onClick={ onClick } type={ htmlType } className={ `btn ${variant} ${isActive} ${ classes }`} title={ titleText }>
       { title }
       { icon }
     </button>
@@ -21,6 +30,7 @@ Button.propTypes = {
   color: PropTypes.string,
   htmlType: PropTypes.string,
   title: PropTypes.string,
+  titleText: PropTypes.string,
   icon: PropTypes.object,
   onClick: PropTypes.func.isRequired
 }

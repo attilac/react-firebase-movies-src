@@ -37,13 +37,13 @@
 
 .MovieList .card {
   transition: all .35s ease-out;
-  transform-origin: center center center;
+  //transform-origin: center center center;
 
   &:hover {
     .card-img-top {
-    transform: scale(1.03);
+    //transform: scale(1.03);
     }  
-    box-shadow: 0 1px 10px 0 rgba(0,0,0,.3);
+    box-shadow: 0 1px 10px 0 rgba(0,0,0,.2);
     //transform: scale(1.005);
     //border-color: rgba($brand-primary, .3);
   }

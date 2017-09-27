@@ -18,15 +18,23 @@ class DropdownSelect extends Component {
     //console.log(this.props.children.props)
     return React.Children
       .map(this.props.children, child => {
-        return child.type.name === 'GenreDropdownMenu' ?
-          React.cloneElement(child, {
+        //console.log(child.type.name)
+        if(child.type.name === 'GenreDropdownMenu') {
+          return React.cloneElement(child, {
             onClick: (event) => {
               this.toggle(event)
               this.props.children.props.onClick(event)
             }
           }) 
-          :
-          child
+        } else if(child.type.name === 'UserDropdownMenu') {
+          return React.cloneElement(child, {
+            onClick: (event) => {
+              this.toggle(event)
+            }
+          }) 
+        } else {
+          return child
+        }
       })
   }  
 
