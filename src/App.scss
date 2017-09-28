@@ -8,9 +8,19 @@
 @import './components/MovieList/MovieList.scss';
 @import './components/MovieDetailPage/MovieDetailPage.scss';
 @import './components/Button/Button.scss';
+@import './components/SortingDropdown/SortingDropdown.scss';
 
 .bg-smoke {
   background-color: #e8e8e8;
+}
+
+.p-relative {
+  position: relative;
+}
+
+.page-title {
+  font-size: 1.875rem;
+  color: darken($brand-info, 20%);
 }
 
 .font-weight-100 {

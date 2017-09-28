@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import firebase from '../../firebase.js'
 
 import MovieList from '../MovieList/MovieList.js'
+import SortingDropdown from '../SortingDropdown/SortingDropdown.js'
 import Spinner from '../Spinner/Spinner'
 
 import utils from '../../scripts/utils.js'
@@ -12,8 +13,12 @@ class MoviePage extends Component {
   state = {
     genre: undefined,
     movies: [],
-    moviesByGenre: []
+    moviesByGenre: [],
+    sortBy: 'year',
+    sortOrder: 'DESC'
   }
+
+  handleSortChange = this.handleSortChange.bind(this);
 
   componentDidMount() {   
   } 
@@ -61,7 +66,6 @@ class MoviePage extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     //console.log('componentDidUpdate')  
-    //console.log(prevProps.match.params.genreName) 
   } 
 
   componentWillUnmount() {
@@ -170,10 +174,25 @@ class MoviePage extends Component {
   
   getGenresFromDatabase() {
     return utils.sortArray(utils.getUniqueArray(utils.getConcatArray(this.getMoviesPropertyList('genres'))))
-  }         
+  }  
+
+  handleSortChange(event) {
+    const { value } = event.target
+    //console.log(value === 'title')
+    const order = value === 'title' ? 'ASC' : 'DESC'
+    if(value) {
+      this.setState({ sortBy: event.target.value })
+      this.setState({ sortOrder: order })
+    }
+  }
  
   render() {
-    const { movies, genre } = this.state,
+    const { 
+        movies, 
+        genre,
+        sortBy,
+        sortOrder 
+      } = this.state,
       { 
         addFavoriteButton,
         addMovieToFavorites,
@@ -187,29 +206,44 @@ class MoviePage extends Component {
         user 
       } = this.props
 
-    utils.sortObjectsByKey(movies, 'releaseDate', 'DESC' )
+    utils.sortObjectsByKey(movies, sortBy, sortOrder )
 
     return ( 
-      movies.length ?   
-        <MovieList 
-          movies={
-            searchTerm ? 
-              this.getMoviesBySearchTerm(movies) 
-              : movies
-          } 
-          colWidth="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 mb-4"
-          genres={ genres }
-          genreOnClick={ genreOnClick }
-          getGenreNameFromKey={ getGenreNameFromKey }
-          getGenreLinkList={ getGenreLinkList }
-          getActorList={ getActorList }
-          heading={ genre ? genre : heading }
-          user={ user }  
-          addMovieToFavorites={ addMovieToFavorites }   
-          addFavoriteButton={ addFavoriteButton }     
-        />   
-        : 
-        <Spinner />      
+      <div className="p-relative">
+        <div className="movie-page-header d-flex flex-row">
+          <h1 className="page-title mb-3 font-weight-100 text-uppercase">
+            { genre ? genre : heading }
+          </h1>
+          <div className="ml-auto"></div>
+          <span className="mr-2 pt-1">Sort By</span>
+          <SortingDropdown 
+            classes=""
+            value={ sortBy }
+            handleSortChange={ this.handleSortChange }
+          />
+        </div>  
+        {  
+          movies.length ?   
+            <MovieList 
+              movies={
+                searchTerm ? 
+                  this.getMoviesBySearchTerm(movies) 
+                  : movies
+              } 
+              colWidth="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 mb-4"
+              genres={ genres }
+              genreOnClick={ genreOnClick }
+              getGenreNameFromKey={ getGenreNameFromKey }
+              getGenreLinkList={ getGenreLinkList }
+              getActorList={ getActorList }
+              user={ user }  
+              addMovieToFavorites={ addMovieToFavorites }   
+              addFavoriteButton={ addFavoriteButton }     
+            />   
+            : 
+            <Spinner />   
+        }  
+      </div>     
     )
   } 
 }

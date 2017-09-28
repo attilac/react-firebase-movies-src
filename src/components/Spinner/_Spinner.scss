@@ -1,5 +1,5 @@
 .ajax-load-indicator-container {
-  position: relative;
+  //position: relative;
   font-size: 3rem;
 }
 .ajax-load-indicator-container {
@@ -7,6 +7,8 @@
   z-index: 1000;
   width: 100Vw;
   height: 100Vh;
+  top: 0;
+  left: 0;
   i{
     position: absolute;
     left: 50%;

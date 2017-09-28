@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import DropdownSelect from '../DropdownSelect/DropdownSelect.js'
-import { DropdownMenu, DropdownItem } from 'reactstrap'
 import PropTypes from 'prop-types'
 import UserDropdownMenu from '../UserDropdownMenu/UserDropdownMenu.js'
 

@@ -224,10 +224,10 @@ class App extends Component {
             this.removeMovieFromFavorites(movie.key, user.uid)
           } } 
           htmlType="button" 
-          classes="btn-sm btn-flat-shadow" 
+          classes="btn-sm btn-round favlist-button" 
           icon={ <i className="fa fa-minus"></i> } 
           title=""
-          color="info" 
+          color="outline-primary" 
           titleText="Remove from my list"
         />
         :    
@@ -236,10 +236,10 @@ class App extends Component {
             this.addMovieToFavorites(movie.key, user.uid)
           } } 
           htmlType="button" 
-          classes="btn-sm btn-flat-shadow" 
+          classes="btn-sm btn-round favlist-button" 
           icon={ <i className="fa fa-plus"></i> } 
           title=""
-          color="info" 
+          color="outline-primary" 
           titleText="Add to my list"
         />,  
       output = user ?
@@ -247,7 +247,7 @@ class App extends Component {
         :
         <Link 
           to="/login"
-          className="btn btn-info btn-sm btn-flat-shadow"
+          className="btn btn--outline-primary btn-sm btn-round favlist-button"
           title="Login to add to my list"
         >
           <i className="fa fa-plus"></i>

@@ -76,7 +76,7 @@ function SiteHeader(props) {
           onSubmit={ searchOnSubmit } 
           onChange={ searchOnChange } 
           value={ searchTerm } 
-          placeHolder="Find Movies" 
+          placeHolder="Filter Movies" 
           classes="form-control font-weight-100 mr-3" 
           name="movieSearch"
         />

@@ -1,18 +1,14 @@
 // eslint-disable-next-line
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import Button from '../Button/Button.js'
 
 function MovieDetail(props) {
   const {
     addFavoriteButton, 
-    addMovieToFavorites,
     genreOnClick, 
     getActorList, 
     getGenreLinkList, 
-    movie, 
-    user 
+    movie
   } = props
 
   return (
@@ -28,7 +24,7 @@ function MovieDetail(props) {
 
             <header className="movie-header mb-3">             
               <h1 className="card-title font-weight-300">
-                <span className="pr-1 d-inline">{ addFavoriteButton(movie) }</span>              
+                <span className="pr-2 d-inline">{ addFavoriteButton(movie) }</span>              
                 { movie.title }
                 <small className="text-muted font-weight-100"> ({ movie.year })</small>
               </h1>               

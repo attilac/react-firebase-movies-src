@@ -27,11 +27,11 @@ function Movie(props) {
           <small className="year text-muted"> ({year})</small>
         </Link>  
       </h2>
-      { genreLinks }
+      { addToFavoriteButton }
       {children}
     </div>  
     <div className="card-footer">
-      { addToFavoriteButton }
+      { genreLinks }
     </div>
   </div>;        
 }

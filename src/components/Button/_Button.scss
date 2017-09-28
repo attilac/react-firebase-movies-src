@@ -29,3 +29,8 @@
     border-bottom-color: darken($btn-secondary-color, 25%);
   }
 }
+
+.btn-round {
+  border-radius: 50%;
+  border-width: 2px;
+}

@@ -30,6 +30,13 @@
       margin-top: 0;
     }    
   }
+
+  .dropdown-item {
+    color: rgba(255, 255, 255, 0.8);
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);    
+    }
+  }
 }
 
 .login-link {

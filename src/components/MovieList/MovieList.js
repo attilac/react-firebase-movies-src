@@ -23,7 +23,7 @@ function MovieList(props) {
             poster={ `/img/${item.poster}` } 
             year={ item.year }
             movieId={ item.key }
-            genreLinks={ getGenreLinkList(item.genres, genreOnClick, '') }
+            genreLinks={ getGenreLinkList(item.genres, genreOnClick, 'mb-0') }
             addToFavoriteButton={ addFavoriteButton(item) }
           >    
           </Movie>  
@@ -39,9 +39,6 @@ function MovieList(props) {
 
   return (
     <section className="MovieList">
-      <h1 className="page-title mb-3 font-weight-100 text-uppercase">
-        { heading }
-      </h1>
       <div className="row">  
         <CSSTransitionGroup
           transitionName="movie-fade"

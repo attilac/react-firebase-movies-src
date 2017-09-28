@@ -5,14 +5,10 @@
 	height: 0;
 	padding-bottom: 153.3742%;
 	//overflow: hidden;
-	&:hover {
-		.responsive-poster-item:after {
-			//opacity: 1;	
-		}
-	}
 }
 
-.responsive-poster-item:after {
+.responsive-poster-item:before {
+	display: block;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -20,11 +16,11 @@
 	bottom: 0;
 	height: 100%;
 	width: 100%;		
-	background: rgba(255, 255, 255, 0.6);
+	background: rgba(255, 255, 255, 0);
 	z-index: 20;
-    content: '\A';
-    opacity: 0;
-    transition: all 0.35s;
+  content: '\A';
+  transition: all 0.35s;
+  border: solid 2px rgba(255, 255, 255, 0);
 }
 
 .responsive-poster-item {
@@ -42,7 +38,7 @@
 	font-size: 1.125rem;
 	font-weight: 500;
 	line-height: 1.5rem;
-	min-height: 2.25rem;
+	min-height: 3rem;
 }
 
 a.movie-link {
@@ -67,4 +63,18 @@ a.genre-link {
 
 .card-footer {
 	padding: .5rem;
+}
+
+.MovieList .favlist-button {
+	border-color: #fff;
+	color: #fff; 		
+	position: absolute;
+	top: .5rem;
+	opacity: 0;
+	transition: all .15s ease-out;
+	z-index: 30;
+}
+
+.MovieDetail .favlist-button {
+	margin-top: -0.3rem;
 }

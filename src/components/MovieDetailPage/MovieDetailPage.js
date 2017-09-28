@@ -15,10 +15,10 @@ class MovieDetailPage extends Component {
   }
 
   componentDidMount() {   
-    this.getMovieFromFirebase(this.props.match.params.movieId)
   } 
 
   componentWillMount() { 
+    this.getMovieFromFirebase(this.props.match.params.movieId)
     //console.log(this.props.match.params.movieId)
     //this.props.match.params.movieId === undefined ?
   }
@@ -69,10 +69,8 @@ class MovieDetailPage extends Component {
         addFavoriteButton,
         addMovieToFavorites, 
         genreOnClick, 
-        genres, 
         getActorList, 
         getGenreLinkList, 
-        match, 
         user 
       } = this.props
 
