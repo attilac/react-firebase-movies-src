@@ -252,9 +252,11 @@ class App extends Component {
   }  
 
   addFavoriteButton = (movie) => {
-    let isFavorite = false
-    //console.log(movie.users !== undefined)
+    /* TODO Fix bug Dont work for multiple users currently */
 
+    //console.log(movie.users !== undefined)
+    /*
+    let isFavorite = false
     if(movie.users !== undefined ) {
       Object.keys(movie.users)
         .map( (item) => {
@@ -262,6 +264,8 @@ class App extends Component {
           isFavorite = item === this.state.user.uid ? true : false
         }) 
     }  
+    //console.log(isFavorite)
+    */
 
     const { user } = this.state,
       favoriteButton =  movie.users ?
