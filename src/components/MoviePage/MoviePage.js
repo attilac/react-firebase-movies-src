@@ -10,6 +10,8 @@ import utils from '../../scripts/utils.js'
 
 class MoviePage extends Component {
 
+  handleSortChange = this.handleSortChange.bind(this);
+
   state = {
     genre: undefined,
     movies: [],
@@ -177,10 +179,10 @@ class MoviePage extends Component {
 
   handleSortChange(event) {
     const { value } = event.target
-    //console.log(value === 'title')
+    //console.log(value)
     const order = value === 'title' ? 'ASC' : 'DESC'
     if(value) {
-      this.setState({ sortBy: event.target.value })
+      this.setState({ sortBy: value })
       this.setState({ sortOrder: order })
     }
   }
