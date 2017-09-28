@@ -20,7 +20,7 @@ class LoginForm extends Component {
   }
 
   fieldOnChange = (event) => {
-    const { name, value } = event.target
+    const { name, value } = event.target  
     this.setState({[name]: value}, 
       () => { 
         this.validateField(name, value) 
@@ -74,8 +74,19 @@ class LoginForm extends Component {
   }    
 
   render() {
-    const { errorMessage, submitBtnLabel } = this.props,
-      { formErrors, password, isPasswordValid, email, isEmailValid } = this.state
+    const 
+      { 
+        errorMessage, 
+        submitBtnLabel, 
+        handleGoogleLogin 
+      } = this.props,
+      { 
+        formErrors, 
+        password, 
+        isPasswordValid, 
+        email, 
+        isEmailValid 
+      } = this.state
 
     return (   
       <form onSubmit={ this.onSubmit } className="form">
@@ -122,10 +133,19 @@ class LoginForm extends Component {
         <Button 
           onClick={ this.onButtonClick } 
           htmlType="submit" 
-          classes="btn-block mt-5 btn-flat-shadow" 
+          classes="btn-block mt-5 mb-5 btn-flat-shadow" 
           title={ submitBtnLabel } 
           color="danger" 
-        />       
+        /> 
+        <hr />
+        <Button 
+          onClick={ handleGoogleLogin } 
+          htmlType="button" 
+          classes="btn-sm mb-3" 
+          title="Login with Google" 
+          color="secondary" 
+          icon={ <i className="fa fa-google mr-1"></i> }
+        />                
       </form>              
     );
   }
@@ -133,6 +153,7 @@ class LoginForm extends Component {
 
 LoginForm.propTypes = {
   errorMessage: PropTypes.string,
+  handleGoogleLogin: PropTypes.func,
   onFormSubmit: PropTypes.func.isRequired, 
   submitBtnLabel: PropTypes.string.isRequired   
 }

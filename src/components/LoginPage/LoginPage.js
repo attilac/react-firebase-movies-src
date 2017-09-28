@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import LoginForm from '../LoginForm/LoginForm.js'
 
 function LoginPage(props) {
-  const { errorMessage, onFormSubmit, submitBtnLabel }  = props
+  const { errorMessage, onFormSubmit, submitBtnLabel, handleGoogleLogin }  = props
 
   return <div className="row">
     <div className="col-sm-8 col-md-6 push-sm-2 push-md-3">
@@ -16,6 +16,7 @@ function LoginPage(props) {
             submitBtnLabel={ submitBtnLabel }
             errorMessage={ errorMessage }
             onFormSubmit={ onFormSubmit } 
+            handleGoogleLogin={ handleGoogleLogin }
           />          
           { props.children }
         </div>  
@@ -27,6 +28,7 @@ function LoginPage(props) {
 LoginPage.propTypes = {
   errorMessage: PropTypes.string,
   children: PropTypes.object,
+  handleGoogleLogin: PropTypes.func,
   onFormSubmit: PropTypes.func,
   submitBtnLabel: PropTypes.string
 }

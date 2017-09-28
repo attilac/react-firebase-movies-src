@@ -33,11 +33,40 @@ class App extends Component {
 
     firebase
       .auth()
+      .getRedirectResult()
+      .then(function(result) {
+        if (result.credential) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          const token = result.credential.accessToken
+        }
+        // The signed-in user info.
+        const user = result.user,
+          email = user.email
+          //const uid = user.uid; //KEY! UID!         
+        this.setState({ 
+          user: user,
+          username: email
+        })        
+      })
+      .catch(function(error) {
+        // Handle Errors here.
+        const errorCode = error.code,
+          errorMessage = error.message,
+          // The email of the user's account used.
+          email = error.email,
+          // The firebase.auth.AuthCredential type that was used.
+          credential = error.credential
+      })
+
+    firebase
+      .auth()
       .onAuthStateChanged(user => {
         if(user) {
           //const displayName = user.displayName;
           const email = user.email;
-          //const uid = user.uid; //KEY! UID!         
+          const uid = user.uid; //KEY! UID!    
+          console.log(uid)     
+          
           this.setState({ 
             user: user,
             username: email
@@ -51,7 +80,7 @@ class App extends Component {
           })          
         }
       })
-  } 
+  }  
 
   componentWillMount() { 
     this.getGenresFromFirebase()
@@ -130,6 +159,12 @@ class App extends Component {
         this.setState({ errorMessage: errorMessage})
         console.log(errorMessage)
       }) 
+  }
+
+  handleGoogleLogin = () => {
+    console.log('Google Login')
+    const provider = new firebase.auth.GoogleAuthProvider()
+    firebase.auth().signInWithRedirect(provider)  
   }
 
   getGenresFromFirebase = () => {
@@ -358,7 +393,8 @@ class App extends Component {
                         user={ user }
                         submitBtnLabel="Log in" 
                         errorMessage={ errorMessage }
-                        onFormSubmit={ this.onFormSubmit }  
+                        onFormSubmit={ this.onFormSubmit }
+                        handleGoogleLogin={ this.handleGoogleLogin }  
                       />                         
 
                       <PrivateRoute

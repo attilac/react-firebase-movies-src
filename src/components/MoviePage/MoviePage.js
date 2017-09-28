@@ -18,8 +18,6 @@ class MoviePage extends Component {
     sortOrder: 'DESC'
   }
 
-  handleSortChange = this.handleSortChange.bind(this);
-
   componentDidMount() {   
   } 
 
@@ -128,10 +126,11 @@ class MoviePage extends Component {
   getFavoriteList = () => {
     //console.log('hej')
     const { uid } = this.props.user
+    //console.log(uid)
     firebase.database()
       .ref('movies')
-      .orderByChild('users')
-      .startAt(true, uid)
+      .orderByChild(`users/${uid}`)
+      .startAt(true)
       .on('value', (snapshot) => {
         //console.log(snapshot.val())      
         let movies = []

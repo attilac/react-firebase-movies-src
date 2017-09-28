@@ -18,8 +18,8 @@ function Button(props) {
 
   return(
     <button onClick={ onClick } type={ htmlType } className={ `btn ${variant} ${isActive} ${ classes }`} title={ titleText }>
-      { title }
       { icon }
+      { title }
     </button>
   )
 }

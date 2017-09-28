@@ -18,6 +18,7 @@ class MovieDetailPage extends Component {
   } 
 
   componentWillMount() { 
+    console.log('componentWillMount')
     this.getMovieFromFirebase(this.props.match.params.movieId)
     //console.log(this.props.match.params.movieId)
     //this.props.match.params.movieId === undefined ?
@@ -37,10 +38,10 @@ class MovieDetailPage extends Component {
   } 
 
   componentWillUnmount() {
+    console.log('componentWillUnmount') 
     firebase.database()
-      .ref('movies')
-      .off()   
-    console.log('componentWillUnmount')      
+      .ref()
+      .off()      
   }         
 
   getMovieFromFirebase = (movieId) => {
