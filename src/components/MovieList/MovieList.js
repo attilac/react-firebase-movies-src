@@ -16,8 +16,8 @@ function MovieList(props) {
       movies
     } = props,
     list = movies
-      .map((item, index) =>
-        <div key={ `movie-${item.key}` } className={ colWidth }>
+      .map((item, index) => {
+        return <div key={ `movie-${item.key}` } className={ colWidth }>
           <Movie 
             title={ item.title } 
             poster={ `/img/${item.poster}` } 
@@ -27,15 +27,8 @@ function MovieList(props) {
             addToFavoriteButton={ addFavoriteButton(item) }
           >    
           </Movie>  
-          { /* item.actors !== undefined && 
-            <div>
-              <h6 className="font-size-sm">Stars</h6>
-              { getActorList(item.actors) }
-            </div>  
-            */
-          }
         </div>  
-      )
+      })
 
   return (
     <section className="MovieList">

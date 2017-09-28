@@ -18,7 +18,7 @@ class MovieDetailPage extends Component {
   } 
 
   componentWillMount() { 
-    console.log('componentWillMount')
+    //console.log('componentWillMount')
     this.getMovieFromFirebase(this.props.match.params.movieId)
     //console.log(this.props.match.params.movieId)
     //this.props.match.params.movieId === undefined ?
@@ -38,7 +38,7 @@ class MovieDetailPage extends Component {
   } 
 
   componentWillUnmount() {
-    console.log('componentWillUnmount') 
+    //console.log('componentWillUnmount') 
     firebase.database()
       .ref()
       .off()      
@@ -52,7 +52,7 @@ class MovieDetailPage extends Component {
         const movie = snapshot.val()
         movie['key'] = snapshot.key   
         //console.log(movie)
-        console.log('Added movie!')
+        //console.log('Added movie!')
         this.setState({ movie: movie })  
       }) 
   }   

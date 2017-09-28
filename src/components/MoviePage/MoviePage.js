@@ -14,7 +14,7 @@ class MoviePage extends Component {
 
   state = {
     genre: undefined,
-    movies: [],
+    movies: undefined,
     moviesByGenre: [],
     sortBy: 'year',
     sortOrder: 'DESC'
@@ -40,7 +40,7 @@ class MoviePage extends Component {
   }
 
   componentWillReceiveProps(nextProps) { 
-    console.log('componentWillReceiveProps')
+    //console.log('componentWillReceiveProps')
     const { match, user, myList, getGenreNameFromKey } = this.props
     if(nextProps.match.params.genreName === undefined){
       user && myList ?
@@ -72,7 +72,7 @@ class MoviePage extends Component {
     firebase.database()
       .ref('movies')
       .off()   
-    console.log('componentWillUnmount')      
+    //console.log('componentWillUnmount')      
   }   
 
   getMoviesByGenre = (genreId) => {
@@ -102,7 +102,7 @@ class MoviePage extends Component {
           movies.push(movie)
         } 
         this.setState({ movies: movies })
-        console.log('Fetched Movies!')
+        //console.log('Fetched Movies!')
       })  
         
   }         
@@ -121,7 +121,7 @@ class MoviePage extends Component {
           movies.push(movie)
         } 
         this.setState({ movies: movies })
-        console.log('Fetched Movies!')
+        //console.log('Fetched Movies!')
       })        
   }  
 
@@ -143,7 +143,7 @@ class MoviePage extends Component {
           movies.push(movie)
         } 
         this.setState({ movies: movies })
-        console.log('Fetched Movies!')
+        //console.log('Fetched Movies!')
       })     
   }
 
@@ -207,7 +207,8 @@ class MoviePage extends Component {
         user 
       } = this.props
 
-    utils.sortObjectsByKey(movies, sortBy, sortOrder )
+    movies !== undefined &&  
+      utils.sortObjectsByKey(movies, sortBy, sortOrder )
 
     return ( 
       <div className="p-relative">
@@ -215,16 +216,19 @@ class MoviePage extends Component {
           <h1 className="page-title mb-3 font-weight-100 text-uppercase">
             { genre ? genre : heading }
           </h1>
-          <div className="ml-auto"></div>
-          <span className="mr-2 pt-1">Sort By</span>
-          <SortingDropdown 
-            classes=""
-            value={ sortBy }
-            handleSortChange={ this.handleSortChange }
-          />
+
+          <div className="ml-auto">
+            <span className="mr-2 pt-1">Sort By</span>
+            <SortingDropdown 
+              classes=""
+              value={ sortBy }
+              handleSortChange={ this.handleSortChange }
+            />
+          </div>
+
         </div>  
         {  
-          movies.length ?   
+          movies !== undefined ?   
             <MovieList 
               movies={
                 searchTerm ? 
@@ -241,7 +245,7 @@ class MoviePage extends Component {
               addMovieToFavorites={ addMovieToFavorites }   
               addFavoriteButton={ addFavoriteButton }     
             />   
-            : 
+            :
             <Spinner />   
         }  
       </div>     

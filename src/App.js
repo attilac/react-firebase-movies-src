@@ -65,13 +65,13 @@ class App extends Component {
           //const displayName = user.displayName;
           const email = user.email;
           const uid = user.uid; //KEY! UID!    
-          console.log(uid)     
+          //console.log(uid)     
           
           this.setState({ 
             user: user,
             username: email
           })
-          console.log(user)
+          //console.log(user)
 
         } else {
           this.setState({ 
@@ -105,7 +105,7 @@ class App extends Component {
         favList['key'] = snapshot.key   
         favList.push(favListItem)
         //console.log(favList)
-        console.log('Added movie to favlist!')
+        //console.log('Added movie to favlist!')
         this.setState({ favList: favList })   
       })
   }  
@@ -162,7 +162,7 @@ class App extends Component {
   }
 
   handleGoogleLogin = () => {
-    console.log('Google Login')
+    //console.log('Google Login')
     const provider = new firebase.auth.GoogleAuthProvider()
     firebase.auth().signInWithRedirect(provider)  
   }
@@ -196,7 +196,7 @@ class App extends Component {
         } 
         //console.log(genres)  
         this.setState({ genres: genres })
-        console.log('Fetched genres!')
+        //console.log('Fetched genres!')
       })     
   }            
 
@@ -218,7 +218,7 @@ class App extends Component {
       .ref(`users_movies/user/${userId}`)
       .update(({ [movieId] : true })) 
       .then( () => {
-        console.log('Pushed a new favlist item') 
+        //console.log('Pushed a new favlist item') 
       }) 
       .catch(error => { 
         console.log('There was an error', error) 
@@ -228,7 +228,7 @@ class App extends Component {
       .ref(`movies/${movieId}/users`)
       .update(({[userId] : true}))      
       .then( () => {
-        console.log('Updated movie!') 
+        //console.log('Updated movie!') 
       }) 
       .catch(error => { 
         console.log('There was an error', error) 
@@ -252,6 +252,17 @@ class App extends Component {
   }  
 
   addFavoriteButton = (movie) => {
+    let isFavorite = false
+    //console.log(movie.users !== undefined)
+
+    if(movie.users !== undefined ) {
+      Object.keys(movie.users)
+        .map( (item) => {
+          //console.log(item === this.state.user.uid)
+          isFavorite = item === this.state.user.uid ? true : false
+        }) 
+    }  
+
     const { user } = this.state,
       favoriteButton =  movie.users ?
         <Button 
