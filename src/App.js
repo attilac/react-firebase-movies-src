@@ -253,22 +253,19 @@ class App extends Component {
 
   addFavoriteButton = (movie) => {
     /* TODO Fix bug Dont work for multiple users currently */
+    const { user } = this.state
+    let isFav = false
 
-    //console.log(movie.users !== undefined)
-    /*
-    let isFavorite = false
-    if(movie.users !== undefined ) {
-      Object.keys(movie.users)
-        .map( (item) => {
-          //console.log(item === this.state.user.uid)
-          isFavorite = item === this.state.user.uid ? true : false
-        }) 
+    if(this.state.user && movie.users !== undefined) {
+      const movieUsers = Object.keys(movie.users)
+        .map( (item) => 
+          item
+        )
+      isFav = movieUsers.includes(user.uid)
     }  
-    //console.log(isFavorite)
-    */
-
-    const { user } = this.state,
-      favoriteButton =  movie.users ?
+    //console.log(isFav)
+  
+    const favoriteButton =  isFav ?
         <Button 
           onClick={ () => {
             this.removeMovieFromFavorites(movie.key, user.uid)
