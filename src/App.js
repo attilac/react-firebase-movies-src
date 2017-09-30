@@ -252,7 +252,6 @@ class App extends Component {
   }  
 
   addFavoriteButton = (movie) => {
-    /* TODO Fix bug Dont work for multiple users currently */
     const { user } = this.state
     let isFav = false
 

@@ -41,6 +41,7 @@
 
   &:hover {
     box-shadow: 0 1px 10px 0 rgba(0,0,0,.2);
+    border-color: rgba($brand-primary, .7);
     
     .card-img-top {
       //transform: scale(1.03);
@@ -51,7 +52,7 @@
     }   
 
     .responsive-poster-item:before {
-      background: rgba(10, 10, 10, .7);
+      background: rgba($brand-inverse, .7);
     }    
   }
 }

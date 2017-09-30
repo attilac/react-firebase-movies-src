@@ -5,15 +5,21 @@ import { Link } from 'react-router-dom'
 import './Movie.css';
 
 function Movie(props) {
-  const {title, poster, year, children, movieId, genreLinks, addToFavoriteButton } = props
+  const {title, poster, year, children, movieId, genreLinks, addToFavoriteButton } = props,
+    posterImage = {
+      backgroundImage: 'url(' + poster + ')',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center'
+    } 
   return <div className="card">
     <Link 
       className="movie-img-link" 
       to={ `/movie/${movieId}`}
     >
       <div className="responsive-poster">
-        <div className="responsive-poster-item">     
-          <img className="card-img-top img-fluid" src={poster} alt=""/>        
+        <div className="responsive-poster-item" style={posterImage}>     
+          { /* <img className="card-img-top img-fluid" src={poster} alt=""/> */ }       
         </div>
       </div>    
     </Link>

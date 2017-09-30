@@ -5933,11 +5933,12 @@ a.text-gray-dark:focus, a.text-gray-dark:hover {
 .MovieList .card {
   transition: all .35s ease-out; }
   .MovieList .card:hover {
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2); }
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.2);
+    border-color: rgba(42, 121, 167, 0.7); }
     .MovieList .card:hover .favlist-button {
       opacity: 1; }
     .MovieList .card:hover .responsive-poster-item:before {
-      background: rgba(10, 10, 10, 0.7); }
+      background: rgba(39, 53, 71, 0.7); }
 
 .movie-detail-enter {
   opacity: 0.01; }
