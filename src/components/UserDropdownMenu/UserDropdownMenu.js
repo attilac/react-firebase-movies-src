@@ -25,9 +25,9 @@ function UserDropdownMenu(props) {
         My List
       </Link>               
       
-      <a className="dropdown-item" onClick={ logOutUser } href="/">
+      <Link className="dropdown-item" onClick={ logOutUser } to="/">
         Log out
-      </a>
+      </Link>
     </DropdownMenu> 
   )
 }

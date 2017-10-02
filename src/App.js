@@ -368,7 +368,7 @@ class App extends Component {
     const { searchTerm, genres, genre } = this.state,
       { username, user, errorMessage } = this.state
     return (
-      <Router> 
+      <Router basename="/react-firebase-movies"> 
         <ScrollToTop>
           <div className="App">        
             {                        
