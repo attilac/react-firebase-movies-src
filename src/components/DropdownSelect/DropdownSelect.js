@@ -4,11 +4,13 @@ import PropTypes from 'prop-types'
 import { Dropdown, DropdownToggle } from 'reactstrap';
 
 class DropdownSelect extends Component {
-  state = {
-    dropdownOpen: false,
-  } 
-
-  toggle = this.toggle.bind(this);
+  constructor() {
+    super()
+    this.state = {
+      dropdownOpen: false,
+    }     
+    this.toggle = this.toggle.bind(this);   
+  }  
 
   toggle(event) {
     this.setState({ dropdownOpen: !this.state.dropdownOpen })
@@ -20,7 +22,7 @@ class DropdownSelect extends Component {
       .map(this.props.children, child => {
         //console.log(child.type.name)
         if(child.type.name === 'GenreDropdownMenu') {
-          return React.cloneElement(child, {
+          return React.cloneElement(child, {         
             onClick: (event) => {
               this.toggle(event)
               this.props.children.props.onClick(event)
